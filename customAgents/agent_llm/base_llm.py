@@ -1,7 +1,19 @@
 from typing import Any
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
+from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
+import yaml
+import os
+import warnings
 
+def load_config(file_path="config.yaml"):
+    with open(file_path, 'r') as file:
+        config = yaml.safe_load(file)
+        for key, value in config.items():
+            os.environ[key] = value
+
+load_config("config.yaml") # load all api keys as environment variables
 
 class BaseLLM:
     def __init__(
@@ -11,7 +23,9 @@ class BaseLLM:
             temperature: float,
             safety_settings: Any = None,
             parser: Any = StrOutputParser(),
-            initialize_verbose: bool = False
+            initialize_verbose: bool = False,
+            json_response: bool = False,
+            max_tokens: int = 2048
         ):
         
         """
@@ -23,9 +37,11 @@ class BaseLLM:
         :param safety_settings: Safety settings for the model to ensure appropriate responses.
         :param parser: The parser to process model outputs. Defaults to StrOutputParser.
         :param initialize_verbose: If True, displays warnings during initialization if there are issues.
+        :param json_response: If True, the model will return a JSON response instead of a string.
+        :param max_tokens: The maximum number of tokens to generate in a single response.
         """
 
-        self._api_key = api_key
+        self._api_key = api_key #should be removed
         self._model = model
         self._temperature = temperature
         self._safety_settings = safety_settings
@@ -33,6 +49,8 @@ class BaseLLM:
         self._initialize_verbose = initialize_verbose
         self._llm = self._initialize_llm() 
         self._chain = self._initialize_chain(self._initialize_verbose)
+        self._json_response = json_response
+        self._max_tokens = max_tokens
 
 
     def _initialize_llm(self):
@@ -43,16 +61,40 @@ class BaseLLM:
         :return: The initialized LLM.
         """
 
-        if self._model == "gemini-pro":
+        if self._model.startswith("gemini"): # Google models
+            if self._json_response:
+                warnings.warn("Google gimini does not support json response, setting json_response to False")
+                self._json_response = False
             return ChatGoogleGenerativeAI(
-                google_api_key=self._api_key,
                 model=self._model,
                 temperature=self._temperature,
                 safety_settings=self._safety_settings
             )
+        
+        elif self._model.startswith("gpt"): # OpenAI models
+            return ChatOpenAI(
+                model=self._model,
+                temperature = self._temperature,
+                max_tokens=self._max_tokens,
+            ) if not self._json_response else ChatOpenAI(
+                model=self._model,
+                temperature = self._temperature,
+                max_tokens=self._max_tokens,
+                model_kwargs={"response_format": {"type": "json_object"}},
+            )
+        
+        elif self._model.startswith("claude"): # Anthropic models
+            if self._json_response:
+                warnings.warn("Anthropic claude does not support json response, setting json_response to False")
+                self._json_response = False
+            return ChatAnthropic(
+                model=self._model,
+                temperature=self._temperature,
+                max_tokens=self._max_tokens,
+            )
         else:
             self._llm = None
-            raise ValueError('No other models implemented for the LLM yet')
+            raise ValueError('Model not supported, please submit a ticket to add support for this model. currently supported models are gemini, gpt, claude')
 
 
     def _initialize_chain(self, initialize_verbose: bool = False):
