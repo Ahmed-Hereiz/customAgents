@@ -25,7 +25,7 @@ class BasePrompt:
 
         :return: A string representation of the instance.
         """
-        return f"model prompt initialized with {self.prompt_string}"
+        return f"model prompt initialized with {self.prompt}"
 
 
     def __str__(self) -> str:
@@ -34,7 +34,7 @@ class BasePrompt:
 
         :return: A string representation of the instance.
         """
-        return f"model prompt initialized with {self.prompt_string}"
+        return f"model prompt initialized with {self.prompt}"
 
 
     def __add__(self, other) -> str:
@@ -44,6 +44,6 @@ class BasePrompt:
         :param other: Another BasePrompt instance.
         :return: The concatenated prompt strings.
         """
-        return self.prompt_string + '\n' + other.prompt_string
+        return self.prompt + '\n' + other.prompt
 
 
