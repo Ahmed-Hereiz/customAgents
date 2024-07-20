@@ -3,17 +3,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
-import yaml
-import os
 import warnings
-
-def load_config(file_path="config.yaml"):
-    with open(file_path, 'r') as file:
-        config = yaml.safe_load(file)
-        for key, value in config.items():
-            os.environ[key] = value
-
-load_config("config.yaml") # load all api keys as environment variables
 
 class BaseLLM:
     def __init__(
@@ -41,7 +31,7 @@ class BaseLLM:
         :param max_tokens: The maximum number of tokens to generate in a single response.
         """
 
-        self._api_key = api_key #should be removed
+        self._api_key = api_key 
         self._model = model
         self._temperature = temperature
         self._safety_settings = safety_settings
@@ -66,6 +56,7 @@ class BaseLLM:
                 warnings.warn("Google gimini does not support json response, setting json_response to False")
                 self._json_response = False
             return ChatGoogleGenerativeAI(
+                google_api_key=self._api_key,
                 model=self._model,
                 temperature=self._temperature,
                 safety_settings=self._safety_settings
@@ -73,6 +64,7 @@ class BaseLLM:
         
         elif self._model.startswith("gpt"): # OpenAI models
             return ChatOpenAI(
+                api_key=self._api_key,
                 model=self._model,
                 temperature = self._temperature,
                 max_tokens=self._max_tokens,
@@ -88,6 +80,7 @@ class BaseLLM:
                 warnings.warn("Anthropic claude does not support json response, setting json_response to False")
                 self._json_response = False
             return ChatAnthropic(
+                api_key=self._api_key,
                 model=self._model,
                 temperature=self._temperature,
                 max_tokens=self._max_tokens,

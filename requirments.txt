@@ -1,5 +1,7 @@
 langchain
 langchain_google_genai
+langchain_openai
+langchain_anthropic
 beautifulsoup4
 bs4
 lxml
