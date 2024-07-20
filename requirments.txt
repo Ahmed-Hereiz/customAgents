@@ -1,0 +1,6 @@
+langchain
+langchain_google_genai
+beautifulsoup4
+bs4
+lxml
+PyPDF2
