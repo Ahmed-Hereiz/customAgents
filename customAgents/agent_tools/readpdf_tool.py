@@ -1,6 +1,6 @@
 from typing import Any
 import PyPDF2
-from modules.agent_tools import BaseTool
+from customAgents.agent_tools import BaseTool
 
 
 class PDFDocReaderTool(BaseTool):

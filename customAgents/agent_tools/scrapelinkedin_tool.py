@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from typing import Any
-from modules.agent_tools import BaseTool
+from customAgents.agent_tools import BaseTool
 
 
 class LinkedinProfileScrapeTool(BaseTool):

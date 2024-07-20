@@ -1,4 +1,4 @@
-from modules.agent_prompt import BasePrompt
+from customAgents.agent_prompt import BasePrompt
 
 
 class PlaceHoldersPrompt(BasePrompt):

@@ -1,5 +1,5 @@
 from typing import Any
-from modules.agent_routers import BaseRouter
+from customAgents.agent_routers import BaseRouter
 
 
 class InterruptRouter(BaseRouter):

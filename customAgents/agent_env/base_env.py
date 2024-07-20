@@ -1,6 +1,6 @@
 from typing import List, Union, Any
-from modules.agent_runtime import BaseRuntime
-from modules.agent_routers import BaseRouter
+from customAgents.agent_runtime import BaseRuntime
+from customAgents.agent_routers import BaseRouter
 
 AgentType = Union[BaseRuntime, BaseRouter]
 
