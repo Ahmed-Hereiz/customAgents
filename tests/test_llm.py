@@ -1,7 +1,7 @@
 from utils import add_root_to_path
 root_path = add_root_to_path()
 
-from modules.agent_llm import SimpleInvokeLLM, SimpleStreamLLM
+from customAgents.agent_llm import SimpleInvokeLLM, SimpleStreamLLM
 from common.utils import load_config, parse_safety_settings, load_template, load_memory_buffer
 
 config = load_config(f"{root_path}/config/llm.json")

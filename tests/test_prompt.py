@@ -1,4 +1,4 @@
-from modules.agent_prompt import ReActPrompt, PlaceHoldersPrompt, SimplePrompt
+from customAgents.agent_prompt import ReActPrompt, PlaceHoldersPrompt, SimplePrompt
 
 assert type(ReActPrompt(question=".").prompt) == str
 assert type(PlaceHoldersPrompt().prompt) == str

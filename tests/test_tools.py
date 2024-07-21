@@ -1,4 +1,4 @@
-from modules.agent_tools import ToolKit, SearchTool, ScrapeLinkTool
+from customAgents.agent_tools import ToolKit, SearchTool, ScrapeLinkTool
 
 search_tool = SearchTool(description="tool to search on the internet",tool_name="search tool")
 scrape_tool = ScrapeLinkTool(description="tool to scrape some link",tool_name="scrape tool")
