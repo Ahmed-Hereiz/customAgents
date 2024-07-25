@@ -53,9 +53,6 @@ class BaseLLM:
         """
 
         if self._model.startswith("gemini"): # Google models
-            if self._json_response:
-                warnings.warn("Google gimini does not support json response, setting json_response to False")
-                self._json_response = False
             return ChatGoogleGenerativeAI(
                 google_api_key=self._api_key,
                 model=self._model,
