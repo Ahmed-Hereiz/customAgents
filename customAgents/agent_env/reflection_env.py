@@ -1,4 +1,3 @@
-from typing import List
 from customAgents.agent_env import BaseEnv
 
 class ReflectionEnv(BaseEnv):
@@ -8,8 +7,8 @@ class ReflectionEnv(BaseEnv):
         super().__init__(agents)
 
     def run(self, num_max_iters=3):
-        agent1 = self.env_runs[0]
-        agent2 = self.env_runs[1]
+        agent1 = self.agents[0]
+        agent2 = self.agents[1]
 
         for _ in range(num_max_iters):
             print("Agent 1 : ")
