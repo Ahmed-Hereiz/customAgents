@@ -39,9 +39,6 @@ class BaseLLM:
         self._initialize_verbose = initialize_verbose
         self._llm = self._initialize_llm() 
         self._chain = self._initialize_chain(self._initialize_verbose)
-        self._json_response = json_response
-        self._generation_max_tokens = max_tokens
-
         
 
     def _initialize_llm(self):
@@ -65,23 +62,13 @@ class BaseLLM:
                 api_key=self._api_key,
                 model=self._model,
                 temperature = self._temperature,
-                max_tokens=self._max_tokens,
-            ) if not self._json_response else ChatOpenAI(
-                model=self._model,
-                temperature = self._temperature,
-                max_tokens=self._generation_max_tokens,
-                model_kwargs={"response_format": {"type": "json_object"}},
             )
         
         elif self._model.startswith("claude"): # Anthropic models
-            if self._json_response:
-                warnings.warn("Anthropic claude does not support json response, setting json_response to False")
-                self._json_response = False
             return ChatAnthropic(
                 api_key=self._api_key,
                 model=self._model,
                 temperature=self._temperature,
-                max_tokens=self._generation_max_tokens,
             )
         else:
             self._llm = None
