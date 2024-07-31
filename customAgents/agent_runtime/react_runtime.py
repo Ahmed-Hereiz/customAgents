@@ -1,9 +1,12 @@
-from typing import Any, Dict
+from typing import Dict
 from customAgents.agent_runtime import BaseRuntime
+from customAgents.agent_llm import BaseLLM
+from customAgents.agent_prompt import BasePrompt
+from customAgents.agent_tools import ToolKit
 
 
 class ReActRuntime(BaseRuntime):
-    def __init__(self, llm: Any, prompt: Any, toolkit: Any):
+    def __init__(self, llm: BaseLLM, prompt: BasePrompt, toolkit: ToolKit):
 
         super().__init__(llm, prompt, toolkit)
 
