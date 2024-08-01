@@ -7,9 +7,15 @@ from customAgents.agent_tools import ToolKit
 class ChooseToolRuntime(BaseRuntime):
     def __init__(self, llm: BaseLLM, prompt: BasePrompt, toolkit: ToolKit):
         
-        super().__init__(llm, prompt, toolkit)
+        self.prompt.prompt = """
+You are an LLM tool user expert your task is to choose the most usefull tools to solve this task :
+{task}
 
-        self.prompt.prompt = "sepecify how to use tools"
+The available tools you have :
+{tools}
+"""
+
+        super().__init__(llm, prompt, toolkit)
 
 
     def step(self) -> str:
@@ -17,4 +23,7 @@ class ChooseToolRuntime(BaseRuntime):
     
 
     def loop(self, n_steps: int = 1) -> str:
+
+        self.prompt.prompt = self.prompt.prompt.replace("{tools}",self.toolkit.tool_names)
+
         return super().loop(n_steps)
