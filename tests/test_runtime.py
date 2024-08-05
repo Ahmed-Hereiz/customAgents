@@ -11,8 +11,8 @@ config = load_config(f"{root_path}/config/llm.json")
 safety_settings = parse_safety_settings(config['safety_settings'])
 
 
-# stream_llm = SimpleStreamLLM(api_key=config['api_key'],model=config['model'],temperature=0.7)
-# prompt = SimplePrompt("tell me 10 linux commands ")
-# agent = HumanLoopRuntime(llm=stream_llm,prompt=prompt)
+stream_llm = SimpleStreamLLM(api_key=config['api_key'],model=config['model'],temperature=0.7)
+prompt = SimplePrompt("tell me 10 linux commands ")
+agent = HumanLoopRuntime(llm=stream_llm,prompt=prompt)
 
-# agent.loop()
+agent.loop()
