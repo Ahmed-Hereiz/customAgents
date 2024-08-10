@@ -4,7 +4,7 @@ from customAgents.agent_routers import BaseRouter
 
 
 class BaseEnv:
-    def __init__(self, agents: List[BaseRuntime], routers: List[BaseRouter]):
+    def __init__(self, agents: List[BaseRuntime], routers: List[BaseRouter] = None):
 
         self.agents = agents
         self.routers = routers
