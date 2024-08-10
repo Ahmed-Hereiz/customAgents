@@ -3,6 +3,7 @@ from customAgents.agent_prompt import PlaceHoldersPrompt
 from customAgents.agent_tools import ToolKit, SearchTool
 from customAgents.agent_runtime import SimpleRuntime
 from customAgents.agent_routers import ToolExecRouter
+from customAgents.agent_env import ReflectionEnv
 from common.utils import load_config, parse_safety_settings
 
 config = load_config(f"../config/llm.json")
@@ -87,3 +88,7 @@ critic_tools = ToolKit(tools=[])
 critic_agent = SimpleRuntime(llm=enhance_llm,prompt=enhance_prompt)
 agent_output = critic_agent.loop()
 print("="*100)
+
+
+env = ReflectionEnv(agents=[enhance_agent,critic_agent])
+env.run()
