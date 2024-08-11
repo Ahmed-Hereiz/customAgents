@@ -13,9 +13,7 @@ class BaseLLM:
             temperature: float,
             safety_settings: Any = None,
             parser: Any = StrOutputParser(),
-            initialize_verbose: bool = False,
-            json_response: bool = False,
-            max_tokens: int = 2048,
+            initialize_verbose: bool = False
         ):
         
         """
