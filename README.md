@@ -7,7 +7,11 @@ git clone https://github.com/Ahmed-Hereiz/customAgents.git
 ```
 
 ```bash
-bash -r scripts/setup.sh
+cd scripts
+```
+
+```bash
+bash ./setup.sh
 ```
 
 ### wait till the setup is done.
