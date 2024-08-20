@@ -10,6 +10,13 @@ class ReflectionEnv(BaseEnv):
         agent1 = self.agents[0]
         agent2 = self.agents[1]
 
+        agent2.prompt.prompt += f"""
+        \n\nNote that you have to stop loop when you make sure that the output is fully corrrect and good by returning single value output which is : 
+        {stop_word}
+        
+        when you make sure that everything is ok just output {stop_word} only with no extra explaination or words as it will be validated by a if condition.
+        """
+
         for _ in range(num_max_iters):
             if verbose_names: print("Agent 1 : ")
             agent1_response = agent1.loop()
