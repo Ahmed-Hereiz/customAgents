@@ -1,4 +1,3 @@
-from typing import List
 from customAgents.agent_env import BaseEnv
 
 class SequentialEnv(BaseEnv):
