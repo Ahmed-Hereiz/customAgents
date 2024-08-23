@@ -20,3 +20,5 @@ class HierarchialEnv(BaseEnv):
                 item.exec_router()
             elif type(item) is list:
                 pass
+            else:
+                TypeError("Unknown Data type...")
