@@ -10,7 +10,7 @@ class SearchTool(ScrapeLinkTool):
             description: str = "Tool used to search the internet",
             tool_name: str = None,
             max_num_chars: int = 5000,
-            num_top_results: int = 3,
+            num_top_results: int = 1,
             get_content_only: bool = True
             ):
         
@@ -24,13 +24,15 @@ class SearchTool(ScrapeLinkTool):
         
         search_results = self._make_search(query=query)
         summarized_results = []
+        full_text_content = ''
         
         for result in search_results[:self.num_top_results]:  
             content = self._fetch_url_content(url=result["link"])
             summarized_results.append({"title": result["title"], "link": result["link"], "content": content})
-        
+            full_text_content += content
+
         if self.get_content_only:
-            return str(summarized_results['content'])
+            return str(full_text_content)
         else:
             return summarized_results
 
