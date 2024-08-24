@@ -33,7 +33,12 @@ Question: What is the product of 22 and 33 ?
 [you in iteration 1]
 Thought: I have to use python code to find the answer
 Action: python tool
-Action Input: print(22*33)
+Action Input: 
+```python
+
+print(22*33)
+
+```
 
 [you then STOP the first iteration after this]
 
@@ -45,10 +50,11 @@ Final Answer: the product of 22 * 33 is 726 [if there is more to describe to mak
 """
 
 llm = SimpleStreamLLM(api_key=config['api_key'],model='gemini-1.5-flash',temperature=0.7,safety_settings=safety_settings)
-prompt = ReActPrompt(question="what is the date today ? ", example_workflow=example_workflow)
-python_tool = PythonRuntimeTool(description="tool that can run python code",tool_name="python_tool")
+prompt = ReActPrompt(question="what is the  weather today in Cairo Egypt? then calculate it in kelvin scale and fehrenhit ", example_workflow=example_workflow)
+python_tool = PythonRuntimeTool(description="tool that can run python code (give the code for this function as md format)",tool_name="python_tool")
 search_tool = SearchTool(description="tool that can search internet (each query you input will get different search)",tool_name="search_tool")
-toolkit = ToolKit(tools=[search_tool])
+toolkit = ToolKit(tools=[search_tool, python_tool])
 agent = ReActRuntime(llm=llm,prompt=prompt,toolkit=toolkit)
 
 print(agent.loop())
+
