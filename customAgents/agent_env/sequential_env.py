@@ -38,7 +38,6 @@ class SequentialEnv(BaseEnv):
         :raises IndexError: If the index is out of range.
         """
         if index >= len(self.env_items):
-
             raise ValueError("index number is more than the len of the items list")
 
         return self.env_items[index]
