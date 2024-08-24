@@ -39,7 +39,7 @@ class SearchTool(ScrapeLinkTool):
         soup = BeautifulSoup(response.text, "html.parser")
 
         results = []
-        for result in soup.find_all("a", {"class": "result__a"}):
+        for result in soup.find_all("a", {"class", "result__url"}):
             title = result.get_text()
             link = result['href']
             if link.startswith('/'):
