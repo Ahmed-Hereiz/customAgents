@@ -21,4 +21,4 @@ class HierarchialEnv(BaseEnv):
             elif type(item) is list:
                 pass
             else:
-                TypeError("Unknown Data type...")
+                raise TypeError("Unknown Data type...")
