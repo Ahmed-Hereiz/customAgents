@@ -18,8 +18,7 @@ class ReActRuntime(BaseRuntime):
     
     def loop(self, agent_max_steps: int = 5) -> str:
 
-        
-        self.prompt.prompt = self.prompt.prompt.replace("{tool_names}",*self.toolkit.tool_names)
+        self.prompt.prompt = self.prompt.prompt.replace("{tool_names}",' '.join(self.toolkit.tool_names))
         self.prompt.prompt = self.prompt.prompt.replace("{tools_and_role}",self.toolkit.tool_instructions)
         
 
@@ -35,14 +34,13 @@ class ReActRuntime(BaseRuntime):
             
             if agent_response['Action'] not in self.toolkit.tool_names:
                 raise Exception(f"Unknown action: {agent_response['Action']}")
- 
+
             tool_result = self.toolkit.execute_tool(agent_response['Action'], agent_response['Action Input'])
-            print(tool_result)
+    
             if len(tool_result) == 0 or tool_result == None:
-                self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result}"
                 warnings.warn("Tool is giving no results (Rerunning the loop again) please check the tools")
-            else:
-                self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result[0]['content']}"
+            
+            self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result}"
 
 
         return "Max iterations reached without finding an answer."
@@ -51,15 +49,27 @@ class ReActRuntime(BaseRuntime):
     def _parse_response(self, response: str) -> Dict[str, str]:
         parsed = {}
         current_key = None
+        multiline_value = False
+
         for line in response.split('\n'):
-            if ':' in line:
+            if ':' in line and not multiline_value:
                 key, value = line.split(':', 1)
                 key = key.strip()
                 value = value.strip()
+
                 if key in ['Thought', 'Action', 'Action Input', 'Observation', 'Final Answer']:
                     current_key = key
-                    parsed[current_key] = value
+                    if key == 'Action Input':
+                        multiline_value = True
+                        parsed[current_key] = value
+                    else:
+                        parsed[current_key] = value
+            elif multiline_value and current_key == 'Action Input':
+                parsed[current_key] += '\n' + line.strip()
+                if line.strip().endswith('```'):
+                    multiline_value = False
             elif current_key:
                 parsed[current_key] += ' ' + line.strip()
+
         return parsed
 
