@@ -4,7 +4,7 @@ class ReflectionEnv(BaseEnv):
     def __init__(self, agents):
         if len(agents) != 2:
             raise ValueError("Reflection class must be initialized with exactly 2 agents.")
-        super().__init__(agents)
+        super().__init__(agents, routers=None)
 
     def run(self, num_max_iters=3, verbose_names=True, stop_word="0"):
         agent1 = self.agents[0]
@@ -27,7 +27,7 @@ class ReflectionEnv(BaseEnv):
             if verbose_names: print("\n")
 
             if agent2_response == stop_word:
-                ## stop word must be implemented in the prompt
+                ## stop word is "0" by defualt...
                 break
 
         return agent1_response, agent2_response
