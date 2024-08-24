@@ -5,9 +5,17 @@ from customAgents.agent_tools import ScrapeLinkTool
 
 
 class SearchTool(ScrapeLinkTool):
-    def __init__(self, description: str, tool_name: str = None, max_num_chars: int = 5000, num_top_results: int = 3):
+    def __init__(
+            self,
+            description: str = "Tool used to search the internet",
+            tool_name: str = None,
+            max_num_chars: int = 5000,
+            num_top_results: int = 3,
+            get_content_only: bool = True
+            ):
         
         self.num_top_results = num_top_results
+        self.get_content_only = get_content_only
         
         super().__init__(description, tool_name, max_num_chars)
 
@@ -21,7 +29,10 @@ class SearchTool(ScrapeLinkTool):
             content = self._fetch_url_content(url=result["link"])
             summarized_results.append({"title": result["title"], "link": result["link"], "content": content})
         
-        return summarized_results
+        if self.get_content_only:
+            return str(summarized_results['content'])
+        else:
+            return summarized_results
 
 
     def _fetch_url_content(self, url: str) -> Any:
@@ -47,3 +58,4 @@ class SearchTool(ScrapeLinkTool):
             results.append({"title": title, "link": link})
             
         return results
+    
