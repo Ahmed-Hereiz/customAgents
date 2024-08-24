@@ -1,3 +1,4 @@
+import warnings
 from typing import Dict
 from customAgents.agent_runtime import BaseRuntime
 from customAgents.agent_llm import BaseLLM
@@ -36,7 +37,13 @@ class ReActRuntime(BaseRuntime):
                 raise Exception(f"Unknown action: {agent_response['Action']}")
  
             tool_result = self.toolkit.execute_tool(agent_response['Action'], agent_response['Action Input'])
-            self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result[0]['content']}"
+            print(tool_result)
+            if len(tool_result) == 0 or tool_result == None:
+                self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result}"
+                warnings.warn("Tool is giving no results (Rerunning the loop again) please check the tools")
+            else:
+                self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result[0]['content']}"
+
 
         return "Max iterations reached without finding an answer."
     
