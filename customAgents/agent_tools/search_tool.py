@@ -1,4 +1,5 @@
 import requests
+import random
 from bs4 import BeautifulSoup # type: ignore
 from typing import Any
 from customAgents.agent_tools import ScrapeLinkTool
@@ -16,6 +17,24 @@ class SearchTool(ScrapeLinkTool):
         
         self.num_top_results = num_top_results
         self.get_content_only = get_content_only
+        self.user_agents = [
+                    "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
+                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+                    "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chromium/91.0.4472.114 Safari/537.36",
+                    "Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
+                    "Mozilla/5.0 (X11; Debian; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
+                    "Mozilla/5.0 (X11; Arch Linux; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
+                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chromium/90.0.4430.212 Safari/537.36",
+                    "Mozilla/5.0 (X11; Linux Mint; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
+                    "Mozilla/5.0 (X11; openSUSE; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
+                    "Mozilla/5.0 (X11; CentOS; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
+                    "Mozilla/5.0 (X11; Gentoo; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
+                    "Mozilla/5.0 (X11; Manjaro; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
+                    "Mozilla/5.0 (X11; Pop!_OS; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
+                    "Mozilla/5.0 (X11; Kali Linux; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
+                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 OPR/77.0.4054.172",
+                    "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 OPR/77.0.4054.172"
+                ]
         
         super().__init__(description, tool_name, max_num_chars)
 
@@ -45,7 +64,7 @@ class SearchTool(ScrapeLinkTool):
 
         url = f"https://duckduckgo.com/html/?q={query}"
         headers = {
-            "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0"
+            "User-Agent": random.choice(self.user_agents)
             }
         
         response = requests.get(url, headers=headers)
