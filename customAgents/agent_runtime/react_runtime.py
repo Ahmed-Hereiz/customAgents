@@ -42,7 +42,6 @@ class ReActRuntime(BaseRuntime):
             
             self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result}"
 
-
         return "Max iterations reached without finding an answer."
     
 
