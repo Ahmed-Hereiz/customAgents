@@ -18,6 +18,8 @@ class SequentialEnv(BaseEnv):
         current_input = initial_input
 
         for item in self.env_items:
+
+            print(type(item))
             
             if type(item) is BaseRuntime:
                 item.prompt.prompt += current_input
