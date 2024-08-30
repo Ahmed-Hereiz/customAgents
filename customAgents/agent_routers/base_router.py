@@ -16,6 +16,8 @@ class BaseRouter:
         
         return f"router will execute after {self.exec_after}"
     
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         
         return f"router will execute after {self.exec_after}"
+    
+    
