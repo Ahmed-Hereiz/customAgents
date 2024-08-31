@@ -21,10 +21,10 @@ class SequentialEnv(BaseEnv):
 
             print(type(item))
             
-            if type(item) is BaseRuntime:
+            if item is BaseRuntime:
                 item.prompt.prompt += current_input
                 current_input = item.loop()
-            elif type(item) is BaseRouter:
+            elif item is BaseRouter:
                 "didn't implement router logic yet"
                 pass
 
