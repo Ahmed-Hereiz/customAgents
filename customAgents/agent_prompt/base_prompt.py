@@ -1,3 +1,7 @@
+from customAgents.agent_prompt.type_utils import agent_prompt_type
+
+
+@agent_prompt_type
 class BasePrompt:
     def __init__(self, prompt_string: str = ""):
         """
