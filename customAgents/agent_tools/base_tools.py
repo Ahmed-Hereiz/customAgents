@@ -1,6 +1,8 @@
 from typing import Any, List
+from type_utils import agent_tools_type
 
 
+@agent_tools_type
 class BaseTool:
     def __init__(self, description: str, tool_name: str = None):
         """
