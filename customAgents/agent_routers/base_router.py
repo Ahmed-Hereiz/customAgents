@@ -1,6 +1,8 @@
 import time
+from type_utils import agent_routers_type
 
 
+@agent_routers_type
 class BaseRouter:
     def __init__(self, exec_after: float = 0):
         
