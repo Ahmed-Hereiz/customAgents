@@ -1,5 +1,5 @@
 import time
-from type_utils import agent_routers_type
+from customAgents.agent_routers.type_utils import agent_routers_type
 
 
 @agent_routers_type
