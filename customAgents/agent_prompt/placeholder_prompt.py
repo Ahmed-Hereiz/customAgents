@@ -18,3 +18,9 @@ class PlaceHoldersPrompt(BasePrompt):
             prompt = prompt.replace(replace,self.placeholders[replace])
 
         return prompt
+    
+
+    def replace_item(self, old: str, new: str):
+
+        self.prompt = self.prompt.replace(old,new)
+        
