@@ -1,5 +1,5 @@
 import json
-from type_utils import agent_runtime_type
+from customAgents.agent_runtime.type_utils import agent_runtime_type
 from customAgents.agent_llm import BaseLLM
 from customAgents.agent_prompt import BasePrompt
 from customAgents.agent_tools import ToolKit
