@@ -1,4 +1,5 @@
 from typing import List, Union
+import customAgents
 from customAgents.agent_env import BaseEnv
 from customAgents.agent_routers import BaseRouter
 from customAgents.agent_runtime import BaseRuntime
@@ -19,14 +20,11 @@ class SequentialEnv(BaseEnv):
 
         for item in self.env_items:
 
-            print(type(item))
-            
-            if item is BaseRuntime:
+            if isinstance(item, BaseRuntime):
                 item.prompt.prompt += current_input
                 current_input = item.loop()
-            elif item is BaseRouter:
-                "didn't implement router logic yet"
-                pass
+            elif isinstance(item, BaseRouter):
+                current_input = item.exec_router(current_input)
 
         return current_input
 

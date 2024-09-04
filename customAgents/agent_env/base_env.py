@@ -1,8 +1,10 @@
 from typing import List, Any
+from customAgents.agent_env.type_utils import agent_env_type
 from customAgents.agent_runtime import BaseRuntime
 from customAgents.agent_routers import BaseRouter
 
 
+@agent_env_type
 class BaseEnv:
     def __init__(self, agents: List[BaseRuntime], routers: List[BaseRouter] = None):
 
