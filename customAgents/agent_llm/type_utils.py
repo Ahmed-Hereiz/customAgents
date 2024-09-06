@@ -16,5 +16,5 @@ class AgentMultiModal(type):
     def __str__(cls):
         return "<class 'customAgents.MultiModal'>"
     
-def agent_llm_type(cls):
+def agent_multimodal_type(cls):
     return AgentMultiModal(cls.__name__, cls.__bases__, dict(cls.__dict__))

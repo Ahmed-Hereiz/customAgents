@@ -1,5 +1,5 @@
 from typing import Any
-from customAgents.agent_llm.type_utils import agent_llm_type
+from customAgents.agent_llm.type_utils import agent_llm_type, agent_multimodal_type
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
@@ -197,7 +197,8 @@ class BaseLLM:
 
         return self._chain
     
-
+    
+@agent_multimodal_type
 class BaseMultiModal:
     def __init__(
             self,
