@@ -4,6 +4,9 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
+from PIL import Image
+import google.generativeai as genai
+
 
 
 @agent_llm_type
@@ -72,7 +75,7 @@ class BaseLLM:
             )
         else:
             self._llm = None
-            raise ValueError('Model not supported, please submit a ticket to add support for this model. currently supported models are gemini, gpt, claude')
+            raise ValueError('Model not supported, currently supported models are gemini, gpt, claude')
 
 
     def _initialize_chain(self, initialize_verbose: bool = False):
@@ -194,3 +197,37 @@ class BaseLLM:
 
         return self._chain
     
+
+class BaseMultiModal:
+    def __init__(
+            self,
+            api_key: str,
+            model: str,
+            temperature: float,
+            safety_settings: Any = None
+        ):
+        
+        self._api_key = api_key
+        self._model = model
+        self._temperature = temperature
+        self._safety_settings = safety_settings
+        self._multi_modal = self._initialize_multimodal()
+
+
+    def _initialize_multimodal(self):
+        if self._model.startswith("gemini"): # Google models
+            return genai.GenerativeModel(
+                model_name=self._model,
+                safety_settings=self._safety_settings
+            )
+        else:
+            self._multi_modal = None
+            raise ValueError('Model not supported. currently supported models is gemini')
+
+
+    def multi_modal_generate(self, prompt: str, img: Image, stream=False):
+        
+        response = self._multi_modal.generate_content([prompt, img], stream=stream)
+        response.resolve()
+
+        return response.text
