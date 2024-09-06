@@ -28,7 +28,7 @@ class SequentialEnv(BaseEnv):
         return current_input
 
 
-    def get_agent(self, index: int):
+    def get_item(self, index: int):
         """
         Returns the item at the specified index.
 
