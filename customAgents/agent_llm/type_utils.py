@@ -7,3 +7,14 @@ class AgentLLMMeta(type):
 
 def agent_llm_type(cls):
     return AgentLLMMeta(cls.__name__, cls.__bases__, dict(cls.__dict__))
+
+
+class AgentMultiModal(type):
+    def __repr__(cls):
+        return "<class 'customAgents.MultiModal'>"
+
+    def __str__(cls):
+        return "<class 'customAgents.MultiModal'>"
+    
+def agent_llm_type(cls):
+    return AgentMultiModal(cls.__name__, cls.__bases__, dict(cls.__dict__))
