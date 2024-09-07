@@ -226,7 +226,7 @@ class BaseMultiModal:
             raise ValueError('Model not supported. currently supported models is gemini')
 
 
-    def multi_modal_generate(self, prompt: str, img: Image, stream=False):
+    def multimodal_generate(self, prompt: str, img: Image, stream=False):
         
         response = self._multi_modal.generate_content([prompt, img], stream=stream)
         response.resolve()
