@@ -232,3 +232,23 @@ class BaseMultiModal:
         response.resolve()
 
         return response.text
+
+
+    def __str__(self) -> str:
+    
+        multimodal_initialized = self._multi_modal is not None
+
+        return f"Model used: {self.model}, wth temperature: {self._temperature}, multimodal initialized: {multimodal_initialized}"
+
+
+    def __str__(self) -> str:
+    
+        multimodal_initialized = self._multi_modal is not None
+
+        return f"Model used: {self.model}, wth temperature: {self._temperature}, multimodal initialized: {multimodal_initialized}"
+
+
+    @property
+    def multimodal(self) -> Any:
+        
+        return self._multi_modal
