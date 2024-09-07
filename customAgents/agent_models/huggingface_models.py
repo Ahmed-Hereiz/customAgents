@@ -3,7 +3,6 @@ from PIL import Image
 from io import BytesIO
 from customAgents.agent_models import BaseModels
 
-hereiz_k = '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'
 
 class HFModels(BaseModels):
     def __init__(self, hugging_face_token: str, model_api_url: str):
@@ -53,7 +52,3 @@ class HFStableDiffusionModels(HFModels):
         ]
     
 
-
-hereiz = HFStableDiffusionModels(hereiz_k, model_id="CompVis/stable-diffusion-v1-1")
-generated_img = hereiz.inference(inputs="beautiful sunshine on snowy land")
-generated_img.show()
