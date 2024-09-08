@@ -46,5 +46,12 @@ class TestcustomAgentsImport(unittest.TestCase):
         except ImportError as e:
             self.fail(f"Import failed for agent_tools: {e}")
 
+    def test_import_agent_models(self):
+        try:
+            from customAgents.agent_models import __all__ as models_all
+            print(f"\nagent_models __all__: {models_all}")
+        except ImportError as e:
+            self.fail(f"Import failed for agent_models: {e}")
+
 if __name__ == '__main__':
     unittest.main()
