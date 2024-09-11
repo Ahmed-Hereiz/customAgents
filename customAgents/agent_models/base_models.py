@@ -11,3 +11,9 @@ class BaseModels:
         """Implement the model inference logic here"""
 
         return 0
+    
+    def __str__(self) -> str:
+        pass
+
+    def __repr__(self) -> str:
+        pass
