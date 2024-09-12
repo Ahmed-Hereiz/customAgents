@@ -4,8 +4,8 @@ from type_utils import agent_models_type
 
 @agent_models_type
 class BaseModels:
-    def __init__(self):
-        pass
+    def __init__(self, model_type):
+        self.model_type = model_type
 
     def inference(self):
         """Implement the model inference logic here"""
@@ -13,7 +13,7 @@ class BaseModels:
         return 0
     
     def __str__(self) -> str:
-        pass
+        return f"initialized model {self.model_type}"
 
     def __repr__(self) -> str:
-        pass
+        return f"initialized model {self.model_type}"
