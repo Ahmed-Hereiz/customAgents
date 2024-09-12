@@ -4,7 +4,7 @@ from type_utils import agent_models_type
 
 @agent_models_type
 class BaseModels:
-    def __init__(self, model_type):
+    def __init__(self, model_type=None):
         self.model_type = model_type
 
     def inference(self):
