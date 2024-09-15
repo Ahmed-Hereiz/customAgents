@@ -23,7 +23,7 @@ class ReActRuntime(BaseRuntime):
             self.prompt.prompt = self.prompt.prompt.replace("{tools_and_role}",self.toolkit.tool_instructions)
         else:
             self.prompt.prompt = self.prompt.prompt.replace("{tool_names}",'**No tools provided in this case just use your own thoughts**')
-            self.prompt.prompt = self.prompt.prompt.replace("{tools_and_role}","(no tools so no actions)")
+            self.prompt.prompt = self.prompt.prompt.replace("{tools_and_role}","(no tools so no actions don't generate any action (only allowed action here is finish) just thought then answer only)")
 
         for _ in range(agent_max_steps):
 
