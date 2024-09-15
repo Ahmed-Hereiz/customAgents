@@ -18,9 +18,12 @@ class ReActRuntime(BaseRuntime):
     
     def loop(self, agent_max_steps: int = 5) -> str:
 
-        self.prompt.prompt = self.prompt.prompt.replace("{tool_names}",' '.join(self.toolkit.tool_names))
-        self.prompt.prompt = self.prompt.prompt.replace("{tools_and_role}",self.toolkit.tool_instructions)
-        
+        if len(self.toolkit) != 0:
+            self.prompt.prompt = self.prompt.prompt.replace("{tool_names}",' '.join(self.toolkit.tool_names))
+            self.prompt.prompt = self.prompt.prompt.replace("{tools_and_role}",self.toolkit.tool_instructions)
+        else:
+            self.prompt.prompt = self.prompt.prompt.replace("{tool_names}",'**No tools provided in this case just use your own thoughts**')
+            self.prompt.prompt = self.prompt.prompt.replace("{tools_and_role}","(no tools so no actions)")
 
         for _ in range(agent_max_steps):
 
