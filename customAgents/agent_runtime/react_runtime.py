@@ -21,9 +21,10 @@ class ReActRuntime(BaseRuntime):
         if len(self.toolkit) != 0:
             self.prompt.prompt = self.prompt.prompt.replace("{tool_names}",' '.join(self.toolkit.tool_names))
             self.prompt.prompt = self.prompt.prompt.replace("{tools_and_role}",self.toolkit.tool_instructions)
+            unempty_toolkit = 1
         else:
             self.prompt.prompt = self.prompt.prompt.replace("{tool_names}",'**No tools provided in this case just use your own thoughts**')
-            self.prompt.prompt = self.prompt.prompt.replace("{tools_and_role}","(no tools so no actions don't generate any action (only allowed action here is finish) just thought then answer only)")
+            self.prompt.prompt = self.prompt.prompt.replace("{tools_and_role}","(no tools so no actions... don't generate any action other than finish once you are sure about the answer)")
 
         for _ in range(agent_max_steps):
 
@@ -35,13 +36,14 @@ class ReActRuntime(BaseRuntime):
                 print("\n")
                 return final_answer
             
-            if agent_response['Action'] not in self.toolkit.tool_names:
-                raise Exception(f"Unknown action: {agent_response['Action']}")
+            if unempty_toolkit:
+                if agent_response['Action'] not in self.toolkit.tool_names:
+                    raise Exception(f"Unknown action: {agent_response['Action']}")
 
-            tool_result = self.toolkit.execute_tool(agent_response['Action'], agent_response['Action Input'])
-    
-            if len(tool_result) == 0 or tool_result == None:
-                warnings.warn("Tool is giving no results (Rerunning the loop again) please check the tools")
+                tool_result = self.toolkit.execute_tool(agent_response['Action'], agent_response['Action Input'])
+        
+                if len(tool_result) == 0 or tool_result == None:
+                    warnings.warn("Tool is giving no results (Rerunning the loop again) please check the tools")
             
             self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result}"
 
