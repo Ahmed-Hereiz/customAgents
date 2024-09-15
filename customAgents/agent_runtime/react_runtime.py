@@ -46,7 +46,10 @@ class ReActRuntime(BaseRuntime):
                 if len(tool_result) == 0 or tool_result == None:
                     warnings.warn("Tool is giving no results (Rerunning the loop again) please check the tools")
             
-            self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result}"
+                self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result}"
+
+            else:
+                self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: No tool used (I have to deal with the previous given text with my own thoughts without any external tool in this case)"
 
         return "Max iterations reached without finding an answer."
     
