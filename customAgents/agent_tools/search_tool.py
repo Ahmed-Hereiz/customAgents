@@ -48,8 +48,12 @@ class SearchTool(ScrapeLinkTool):
         full_text_content = ''
 
         if self.save_last_search_links_path is not None:
+            search_results_txt = 'Search Results : \n\n'
+            for result in search_results[:self.num_top_results]:
+                search_results_txt += f"Link: {result['link']}\n\n"
+
             with open(self.save_last_search_links_path,'w') as f:
-                f.write(search_results)
+                f.write(search_results_txt)
         
         for result in search_results[:self.num_top_results]:  
             content = self._fetch_url_content(url=result["link"])
