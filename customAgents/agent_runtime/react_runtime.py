@@ -43,11 +43,15 @@ class ReActRuntime(BaseRuntime):
 
                 try:
                     tool_result = self.toolkit.execute_tool(agent_response['Action'], agent_response['Action Input'])
-                except:
+                except Exception as e:
                     tool_result = None
+                    error_message = str(e) 
+                    warnings.warn(f"Tool execution failed with error: {error_message}")
 
-                if len(tool_result) == 0 or tool_result == None:
+                if tool_result == None:
                     warnings.warn("Tool is giving no results (Rerunning the loop again) please check the tools")
+                elif len(tool_result) == 0:
+                    warnings.warn("Tool is giving no empty list (Rerunning the loop again) please check the tools")
             
                 self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result}"
 
