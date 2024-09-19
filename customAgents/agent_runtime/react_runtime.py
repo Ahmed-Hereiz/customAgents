@@ -41,8 +41,11 @@ class ReActRuntime(BaseRuntime):
                 if agent_response['Action'] not in self.toolkit.tool_names:
                     raise Exception(f"Unknown action: {agent_response['Action']}")
 
-                tool_result = self.toolkit.execute_tool(agent_response['Action'], agent_response['Action Input'])
-        
+                try:
+                    tool_result = self.toolkit.execute_tool(agent_response['Action'], agent_response['Action Input'])
+                except:
+                    tool_result = None
+
                 if len(tool_result) == 0 or tool_result == None:
                     warnings.warn("Tool is giving no results (Rerunning the loop again) please check the tools")
             
