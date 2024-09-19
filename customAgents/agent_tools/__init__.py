@@ -4,6 +4,7 @@ from .search_tool import SearchTool
 from .readpdf_tool import PDFDocReaderTool, PDFDocReaderSaverTool
 from .scrapegithub_tool import GithubAccScrapeTool, GithubAccScrapeSaveTool
 from .pythonexec_tool import PythonRuntimeTool
+from .modelinference_tool import ModelInferenceTool
 
 
 __all__ = [
@@ -17,5 +18,6 @@ __all__ = [
     'PDFDocReaderSaverTool',
     'GithubAccScrapeTool',
     'GithubAccScrapeSaveTool',
-    'PythonRuntimeTool'
+    'PythonRuntimeTool',
+    'ModelInferenceTool'
 ]

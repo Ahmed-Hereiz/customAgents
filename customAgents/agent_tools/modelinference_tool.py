@@ -17,10 +17,10 @@ class ModelInferenceTool(BaseTool):
         result = self.model.inference(*args, **kwargs)
 
         if isinstance(result, str):
-            return f"Text result: {result}"
+            return f"Text result: {result}", result
         elif isinstance(result, list): 
-            return f"List result with {len(result)} items."
+            return f"List result with {len(result)} items.", result
         elif isinstance(result, dict):  
-            return f"Dictionary result: {result.keys()}"
+            return f"Dictionary result: {result.keys()}", result
         else:
-            return f"returned result type: {type(result)}"
+            return f"returned result type: {type(result)}", result
