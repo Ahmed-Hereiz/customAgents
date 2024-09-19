@@ -1,5 +1,6 @@
 import time
 import requests
+from pathlib import Path
 from bs4 import BeautifulSoup # type: ignore
 from typing import Any
 from selenium import webdriver
@@ -26,7 +27,7 @@ class ScrapeLinkTool(BaseTool):
         super().__init__(description, tool_name)
 
 
-    def execute_func(self, url: str) -> Any:
+    def execute_func(self, url: str) -> str:
 
         return requests.get(url, headers=self.headers)
     
@@ -35,7 +36,7 @@ class ScrapeStaticLinkTool(ScrapeLinkTool):
     def __init__(self, description: str, tool_name: str = None, max_num_chars: int = 5000):
         super().__init__(description, tool_name, max_num_chars)
 
-    def execute_func(self, url: str) -> Any:
+    def execute_func(self, url: str) -> str:
         
         response = requests.get(url, headers=self.headers)
         soup = BeautifulSoup(response.text, "html.parser")
@@ -47,17 +48,17 @@ class ScrapeStaticLinkTool(ScrapeLinkTool):
     
 
 class ScrapeDynamicLinkTool(ScrapeLinkTool):
-    def __init__(self, description: str, service: str = "/usr/bin/chromedriver", tool_name: str = None, max_num_chars: int = 5000):
-        
+    def __init__(self, description: str, service: str="/usr/bin/chromedriver", tool_name: str = None, max_num_chars: int = 5000):
         self.service = service
-
         super().__init__(description, tool_name, max_num_chars)
 
     def execute_func(self, url: str) -> str:
-        driver = webdriver.Chrome(service=self.service)
+
+        service = Service(self.service)
+        driver = webdriver.Chrome(service=service)
 
         driver.get(url)
-        time.sleep(5)
+        time.sleep(5)  
         page_source = driver.page_source
         driver.quit()
 
@@ -85,4 +86,3 @@ class ScrapeDynamicLinkTool(ScrapeLinkTool):
 
         content = "\n".join(markdown_content)
         return content[:self.max_num_chars]
-
