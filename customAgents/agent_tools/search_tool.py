@@ -2,10 +2,10 @@ import requests
 import random
 from bs4 import BeautifulSoup # type: ignore
 from typing import Any
-from customAgents.agent_tools import ScrapeLinkTool
+from customAgents.agent_tools import ScrapeStaticLinkTool
 
 
-class SearchTool(ScrapeLinkTool):
+class SearchTool(ScrapeStaticLinkTool):
     def __init__(
             self,
             description: str = "Tool used to search the internet",
