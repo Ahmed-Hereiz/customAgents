@@ -1,5 +1,6 @@
 import warnings
 from typing import Dict
+from colorama import Fore
 from customAgents.agent_runtime import BaseRuntime
 from customAgents.agent_llm import BaseLLM
 from customAgents.agent_prompt import BasePrompt
@@ -16,7 +17,7 @@ class ReActRuntime(BaseRuntime):
         response = super().step()
         return self._parse_response(response=response)
     
-    def loop(self, agent_max_steps: int = 5) -> str:
+    def loop(self, agent_max_steps: int = 5, verbose_tools: bool = False) -> str:
 
         if len(self.toolkit) != 0:
             self.prompt.prompt = self.prompt.prompt.replace("{tool_names}",' '.join(self.toolkit.tool_names))
@@ -52,6 +53,9 @@ class ReActRuntime(BaseRuntime):
                     warnings.warn("Tool is giving no results (Rerunning the loop again) please check the tools")
                 elif len(tool_result) == 0:
                     warnings.warn("Tool is giving no empty list (Rerunning the loop again) please check the tools")
+
+                if verbose_tools:
+                    print(Fore.LIGHTYELLOW_EX + f"Tool Results :\n{tool_result}")
             
                 self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result}"
 

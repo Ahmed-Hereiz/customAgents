@@ -1,4 +1,5 @@
 from typing import Any
+from colorama import Fore
 from customAgents.agent_llm.type_utils import agent_llm_type
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
@@ -94,7 +95,7 @@ class BaseLLM:
         return None
 
 
-    def generate_response(self, input: str) -> str:
+    def generate_response(self, input: str, verbose: bool = True) -> str:
         """
         Generates a response from the chain using the given input.
 
@@ -108,7 +109,7 @@ class BaseLLM:
 
         chunks = []
         for chunk in self._chain.stream(input=input):
-            print(chunk, end='', flush=True)
+            if verbose: print(Fore.LIGHTGREEN_EX + chunk, end='', flush=True)
             chunks.append(chunk)
         return ''.join(chunks)
 
