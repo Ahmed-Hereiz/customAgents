@@ -81,6 +81,9 @@ class ReActRuntime(BaseRuntime):
                     if key == 'Action Input':
                         multiline_value = True
                         parsed[current_key] = value
+                    elif key == 'Final Answer':
+                        parsed[current_key] = response.split('Final Answer:', 1)[1].strip()  
+                        return parsed
                     else:
                         parsed[current_key] = value
             elif multiline_value and current_key == 'Action Input':
@@ -91,4 +94,5 @@ class ReActRuntime(BaseRuntime):
                 parsed[current_key] += ' ' + line.strip()
 
         return parsed
+
 
