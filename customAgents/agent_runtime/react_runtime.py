@@ -1,6 +1,6 @@
 import warnings
 from typing import Dict
-from colorama import Fore
+from colorama import Fore, Style
 from customAgents.agent_runtime import BaseRuntime
 from customAgents.agent_llm import BaseLLM
 from customAgents.agent_prompt import BasePrompt
@@ -55,7 +55,7 @@ class ReActRuntime(BaseRuntime):
                     warnings.warn("Tool is giving no empty list (Rerunning the loop again) please check the tools")
 
                 if verbose_tools:
-                    print(Fore.LIGHTYELLOW_EX + f"Tool Results :\n{tool_result}")
+                    print(Fore.LIGHTYELLOW_EX + f"Tool Results :\n{tool_result}" + Style.RESET_ALL)
             
                 self.prompt.prompt += f"Thought: {agent_response['Thought']}\nAction: {agent_response['Action']}\nAction Input: {agent_response['Action Input']}\nObservation: {tool_result}"
 

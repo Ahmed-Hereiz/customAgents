@@ -1,5 +1,5 @@
 from typing import Any
-from colorama import Fore
+from colorama import Fore, Style
 from customAgents.agent_llm.type_utils import agent_llm_type
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
@@ -109,7 +109,7 @@ class BaseLLM:
 
         chunks = []
         for chunk in self._chain.stream(input=input):
-            if verbose: print(Fore.LIGHTGREEN_EX + chunk, end='', flush=True)
+            if verbose: print(Fore.LIGHTGREEN_EX + chunk + Style.RESET_ALL, end='', flush=True)
             chunks.append(chunk)
         return ''.join(chunks)
 
