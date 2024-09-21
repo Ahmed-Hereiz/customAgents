@@ -13,8 +13,9 @@ class GradioClientModels(BaseModels):
     def inference(self, input_prompt):
 
         client = Client(self.gradio_client_id)
-
-        return client.predict(
+        client_output = client.predict(
             input_prompt,
             api_name=self.api_name
         )
+
+        return client_output
