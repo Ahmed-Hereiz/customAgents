@@ -23,6 +23,10 @@ class BaseMultiModal:
 
     def _initialize_multimodal(self):
         if self._model.startswith("gemini"): # Google models
+            genai.configure(
+                api_key=self._api_key,
+                transport="rest"
+            )
             return genai.GenerativeModel(
                 model_name=self._model,
                 safety_settings=self._safety_settings
@@ -51,7 +55,7 @@ class BaseMultiModal:
     
         multimodal_initialized = self._multi_modal is not None
 
-        return f"Model used: {self.model}, wth temperature: {self._temperature}, multimodal initialized: {multimodal_initialized}"
+        return f"Model used: {self._model}, wth temperature: {self._temperature}, multimodal initialized: {multimodal_initialized}"
 
 
     @property
