@@ -1,9 +1,17 @@
-from typing import Any
 import PyPDF2
 from customAgents.agent_tools import BaseTool
 
 
 class PDFDocReaderTool(BaseTool):
+    def __init__(
+            self,
+            description: str = "Tool used to read data in pdf",
+            tool_name: str = None,
+            ):
+        
+        super().__init__(description, tool_name)
+    
+    
     def execute_func(self, pdf_path) -> str:
         
         text = ""
@@ -15,14 +23,3 @@ class PDFDocReaderTool(BaseTool):
                 text += page.extract_text()
         return text 
     
-
-
-class PDFDocReaderSaverTool(PDFDocReaderTool):
-    def execute_func(self, pdf_path, md_path) -> str:
-        text = super().execute_func(pdf_path)
-
-        with open(md_path, "w") as file:
-            file.write("# PDF Content \n\n")
-            file.write(text)
-
-        print(f"Content Saved to {md_path}")
