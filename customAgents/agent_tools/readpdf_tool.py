@@ -1,3 +1,4 @@
+import re
 import PyPDF2
 from customAgents.agent_tools import BaseTool
 
@@ -15,6 +16,7 @@ class PDFDocReaderTool(BaseTool):
     def execute_func(self, pdf_path) -> str:
         
         text = ""
+        pdf_path = self._clean_path(pdf_path)
         with open(pdf_path, "rb") as file:
             reader = PyPDF2.PdfReader(file)
             num_pages = len(reader.pages)
@@ -23,3 +25,7 @@ class PDFDocReaderTool(BaseTool):
                 text += page.extract_text()
         return text 
     
+
+    def _clean_path(self, text: str) -> str:
+        cleaned_text = re.sub(r'(?<=\.pdf)\n', '', text)
+        return cleaned_text
