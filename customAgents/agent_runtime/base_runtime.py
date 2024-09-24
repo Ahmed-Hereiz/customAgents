@@ -30,7 +30,7 @@ class BaseRuntime:
         """
         if not self.llm or not self.prompt:
             raise ValueError("LLM or agent prompt is not properly initialized.")
-        if isinstance(self.llm, BaseRuntime):
+        if isinstance(self.llm, BaseLLM):
             response = self.llm.llm_generate(input=self.prompt.prompt)
             return response
         elif isinstance(self.llm, BaseMultiModal):
