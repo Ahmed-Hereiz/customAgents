@@ -32,9 +32,10 @@ class BaseRuntime:
             raise ValueError("LLM or agent prompt is not properly initialized.")
         if isinstance(self.llm, BaseRuntime):
             response = self.llm.llm_generate(input=self.prompt.prompt)
+            return response
         elif isinstance(self.llm, BaseMultiModal):
             response = self.llm.multimodal_generate(prompt=self.prompt.prompt,img=self.prompt.img)
-        return response
+            return response
 
 
     def loop(self, n_steps: int = 1) -> str:

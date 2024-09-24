@@ -70,18 +70,18 @@ class BashRuntimeTool(BaseTool):
 
 # Usage :
 
-tool = BashRuntimeTool()
+# tool = BashRuntimeTool()
 
-code = """
-```bash
-#!/bin/bash
-echo "Starting process..."
-echo "Listing files in the current directory:"
-ls -l
-echo "hello world"
-```
-"""
+# code = """
+# ```bash
+# #!/bin/bash
+# echo "Starting process..."
+# echo "Listing files in the current directory:"
+# ls -l
+# echo "hello world"
+# ```
+# """
 
-result = tool.execute_func(code)
-print(result)
+# result = tool.execute_func(code)
+# print(result)
 
