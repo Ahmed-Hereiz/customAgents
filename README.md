@@ -14,4 +14,5 @@ cd scripts
 bash ./setup.sh
 ```
 
-### wait till the setup is done.
+### wait till the setup is done... 
+
