@@ -6,6 +6,7 @@ from .scrapegithub_tool import GithubAccScrapeTool, GithubAccScrapeSaveTool
 from .pythonexec_tool import PythonRuntimeTool
 from .bashexec_tool import BashRuntimeTool
 from .modelinference_tool import ModelInferenceTool
+from .langchaintoolloader_tool import LangchainToolLoader
 
 
 __all__ = [
@@ -20,5 +21,6 @@ __all__ = [
     'GithubAccScrapeSaveTool',
     'PythonRuntimeTool',
     'BashRuntimeTool',
-    'ModelInferenceTool'
+    'ModelInferenceTool',
+    'LangchainToolLoader'
 ]
