@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 from colorama import Fore, Style
 from customAgents.agent_llm.type_utils import agent_llm_type
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -16,7 +16,13 @@ class BaseLLM:
             temperature: float,
             safety_settings: Any = None,
             parser: Any = StrOutputParser(),
-            initialize_verbose: bool = False
+            initialize_verbose: bool = False,
+            max_tokens: Optional[int] = None,
+            top_p: Optional[float] = None,
+            frequency_penalty: Optional[float] = None,
+            presence_penalty: Optional[float] = None,
+            *args: Any,
+            **kwargs: Any
         ):
         
         """
@@ -28,8 +34,12 @@ class BaseLLM:
         :param safety_settings: Safety settings for the model to ensure appropriate responses.
         :param parser: The parser to process model outputs. Defaults to StrOutputParser.
         :param initialize_verbose: If True, displays warnings during initialization if there are issues.
-        :param json_response: If True, the model will return a JSON response instead of a string.
         :param max_tokens: The maximum number of tokens to generate in a single response.
+        :param top_p: The cumulative probability for top-p sampling.
+        :param frequency_penalty: Penalizes new tokens based on their existing frequency in the text.
+        :param presence_penalty: Penalizes new tokens based on whether they appear in the text so far.
+        :param *args: Additional positional arguments.
+        :param **kwargs: Additional keyword arguments.
         """
 
         self._api_key = api_key 
@@ -38,6 +48,12 @@ class BaseLLM:
         self._safety_settings = safety_settings
         self._parser = parser
         self._initialize_verbose = initialize_verbose
+        self._max_tokens = max_tokens
+        self._top_p = top_p
+        self._frequency_penalty = frequency_penalty
+        self._presence_penalty = presence_penalty
+        self._additional_args = args
+        self._additional_kwargs = kwargs
         self._llm = self._initialize_llm() 
         self._chain = self._initialize_chain(self._initialize_verbose)
         
@@ -50,26 +66,35 @@ class BaseLLM:
         :return: The initialized LLM.
         """
 
+        common_params = {
+            "temperature": self._temperature,
+            "max_tokens": self._max_tokens,
+            "top_p": self._top_p,
+            "frequency_penalty": self._frequency_penalty,
+            "presence_penalty": self._presence_penalty,
+            **self._additional_kwargs
+        }
+
         if self._model.startswith("gemini"): # Google models
             return ChatGoogleGenerativeAI(
                 google_api_key=self._api_key,
                 model=self._model,
-                temperature=self._temperature,
-                safety_settings=self._safety_settings
+                safety_settings=self._safety_settings,
+                **common_params
             )
         
         elif self._model.startswith("gpt"): # OpenAI models
             return ChatOpenAI(
                 api_key=self._api_key,
                 model=self._model,
-                temperature = self._temperature,
+                **common_params
             )
         
         elif self._model.startswith("claude"): # Anthropic models
             return ChatAnthropic(
                 api_key=self._api_key,
                 model=self._model,
-                temperature=self._temperature,
+                **common_params
             )
         else:
             self._llm = None
@@ -231,5 +256,3 @@ class BaseLLM:
     @property
     def available_text_colors(self):
         return ['default', 'green', 'blue', 'yellow', 'cyan', 'red', 'magenta']
-    
-    
