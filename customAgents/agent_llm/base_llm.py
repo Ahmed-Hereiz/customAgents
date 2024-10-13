@@ -1,13 +1,11 @@
 from typing import Any, Optional
 from colorama import Fore, Style
-from customAgents.agent_llm.type_utils import agent_llm_type
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 
 
-@agent_llm_type
 class BaseLLM:
     def __init__(
             self,

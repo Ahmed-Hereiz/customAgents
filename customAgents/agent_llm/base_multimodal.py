@@ -1,11 +1,10 @@
 from colorama import Fore, Style
 from typing import Any, List, Union
-from PIL import Image
-from customAgents.agent_llm.type_utils import agent_multimodal_type
-import google.generativeai as genai
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
 
 
-@agent_multimodal_type
 class BaseMultiModal:
     def __init__(
             self,
@@ -13,7 +12,7 @@ class BaseMultiModal:
             model: str,
             temperature: float = 0.7,
             safety_settings: Any = None,
-            max_output_tokens: int = 1024
+            max_output_tokens: int = None
         ):
         
         self._api_key = api_key
@@ -25,38 +24,50 @@ class BaseMultiModal:
 
     def _initialize_multimodal(self):
         if self._model.startswith("gemini"):  # Google models
-            genai.configure(api_key=self._api_key, transport="rest")
-            return genai.GenerativeModel(
-                model_name=self._model,
-                generation_config={
-                    "temperature": self._temperature,
-                    "max_output_tokens": self._max_output_tokens,
-                },
-                safety_settings=self._safety_settings
+            return ChatGoogleGenerativeAI(
+                model=self._model,
+                google_api_key=self._api_key,
+                temperature=self._temperature,
+                max_output_tokens=self._max_output_tokens,
+                convert_system_message_to_human=True
+            )
+        elif self._model.startswith("gpt"):  # OpenAI models
+            return ChatOpenAI(
+                model=self._model,
+                openai_api_key=self._api_key,
+                temperature=self._temperature,
+                max_tokens=self._max_output_tokens
+            )
+        elif self._model.startswith("claude"):  # Anthropic models
+            return ChatAnthropic(
+                model=self._model,
+                anthropic_api_key=self._api_key,
+                temperature=self._temperature,
+                max_tokens_to_sample=self._max_output_tokens
             )
         else:
-            raise ValueError('Model not supported. Currently supported models: gemini')
+            raise ValueError('Model not supported. Currently supported models: gemini, gpt, claude')
 
     def multimodal_generate(self, prompt: Union[str, List[Union[str, Any]]], stream: bool = False, output_style: str = 'default') -> str:
         if isinstance(prompt, str):
             prompt = [prompt]
         
-        response = self._multi_modal.generate_content(prompt, stream=stream)
-        
         if stream:
-            return self._handle_stream_response(response, output_style)
-        else:
-            response.resolve()
-            return response.text
-
-    def _handle_stream_response(self, response, output_style: str) -> str:
-        chunks = []
-        for chunk in response:
-            if chunk.text:
+            response_generator = self._multi_modal.stream(prompt)
+            full_response = ""
+            for chunk in response_generator:
+                chunk_text = chunk.content
+                full_response += chunk_text
                 if output_style != 'default':
-                    self._print_colorized_output(chunk=chunk.text, output_style=output_style)
-                chunks.append(chunk.text)
-        return ''.join(chunks)
+                    self._print_colorized_output(chunk=chunk_text, output_style=output_style)
+                else:
+                    print(chunk_text, end="", flush=True)
+            return full_response
+        else:
+            response = self._multi_modal.predict(prompt)
+            if output_style != 'default':
+                self._print_colorized_output(chunk=response, output_style=output_style)
+            return response
 
     def _print_colorized_output(self, chunk: str, output_style: str) -> None:
         """
