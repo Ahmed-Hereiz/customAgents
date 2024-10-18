@@ -23,5 +23,5 @@ To get started with building your custom AI agents, follow these simple steps:
    ```
 
 ### Note:
-Please wait until the setup process is complete...
+wait until the setup process is complete...
 
