@@ -11,8 +11,9 @@ class ReActPrompt(BasePrompt):
 
         super().__init__(prompt_string, img)
 
-        self.prompt = self._generate_prompt()
         self.img = self._load_image(img)
+        self.prompt = self._generate_prompt()
+        
         
 
     def _generate_prompt(self):
