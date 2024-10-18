@@ -1,10 +1,15 @@
 from colorama import Fore, Style
-from typing import Any, List, Union
+from typing import Any, List
 from PIL import Image
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
+from langchain.schema import HumanMessage, AIMessage
+import io
+import base64
+import warnings
 
+warnings.filterwarnings("ignore")
 
 class BaseMultiModal:
     def __init__(
@@ -49,15 +54,21 @@ class BaseMultiModal:
         else:
             raise ValueError('Model not supported. Currently supported models: gemini, gpt, claude')
 
-    def multimodal_generate(self, prompt: Union[str, List[Union[str, Any]]], img: Image, stream: bool = False, output_style: str = 'default') -> str:
-        if isinstance(prompt, str):
-            prompt = [prompt]
-        
-        if img is not None:
-            prompt.append(f"Image provided: {img}")
+    def multimodal_generate(self, prompt: str, img: Image.Image, stream: bool = False, output_style: str = 'default') -> str:
+
+        buffered = io.BytesIO()
+        img.save(buffered, format="PNG")
+        img_str = base64.b64encode(buffered.getvalue()).decode()
+
+        image_message = HumanMessage(
+            content=[
+                {"type": "text", "text": prompt},
+                {"type": "image_url", "image_url": f"data:image/png;base64,{img_str}"}
+            ]
+        )
 
         if stream:
-            response_generator = self._multi_modal.stream(prompt)
+            response_generator = self._multi_modal.stream([image_message])
             full_response = ""
             for chunk in response_generator:
                 chunk_text = chunk.content
@@ -68,10 +79,16 @@ class BaseMultiModal:
                     print(chunk_text, end="", flush=True)
             return full_response
         else:
-            response = self._multi_modal.predict(prompt)
+            response = self._multi_modal.invoke([image_message])
+            if isinstance(response, AIMessage):
+                response_text = response.content
+            else:
+                response_text = str(response)
+            
             if output_style != 'default':
-                self._print_colorized_output(chunk=response, output_style=output_style)
-            return response
+                self._print_colorized_output(chunk=response_text, output_style=output_style)
+            return response_text
+
 
     def _print_colorized_output(self, chunk: str, output_style: str) -> None:
         """
