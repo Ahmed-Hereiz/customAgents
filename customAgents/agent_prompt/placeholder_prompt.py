@@ -11,6 +11,7 @@ class PlaceHoldersPrompt(BasePrompt):
         super().__init__(prompt_string=prompt_string, img=img)
 
         self.prompt = self._generate_prompt()
+        self.img = self._load_image(img)
 
     def _generate_prompt(self):
 

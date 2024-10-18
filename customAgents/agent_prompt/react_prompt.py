@@ -8,11 +8,11 @@ class ReActPrompt(BasePrompt):
         
         self.example_workflow = example_workflow
         self.question = question
-        self.img = img
 
         super().__init__(prompt_string, img)
 
         self.prompt = self._generate_prompt()
+        self.img = self._load_image(img)
         
 
     def _generate_prompt(self):

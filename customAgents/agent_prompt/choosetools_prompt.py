@@ -7,7 +7,9 @@ class ChooseToolsPrompt(BasePrompt):
     def __init__(self, task: str, prompt_string: str = "", img: Union[str, Image.Image, None] = None):
         self.task = task
         super().__init__(prompt_string, img)
+
         self.prompt = self._generate_prompt()
+        self.img = self._load_image(img)
 
     def _generate_prompt(self):
         choose_tools_prompt = """
