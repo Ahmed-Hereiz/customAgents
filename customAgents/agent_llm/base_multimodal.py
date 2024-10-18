@@ -1,5 +1,6 @@
 from colorama import Fore, Style
 from typing import Any, List, Union
+from PIL import Image
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
@@ -48,10 +49,13 @@ class BaseMultiModal:
         else:
             raise ValueError('Model not supported. Currently supported models: gemini, gpt, claude')
 
-    def multimodal_generate(self, prompt: Union[str, List[Union[str, Any]]], stream: bool = False, output_style: str = 'default') -> str:
+    def multimodal_generate(self, prompt: Union[str, List[Union[str, Any]]], img: Image, stream: bool = False, output_style: str = 'default') -> str:
         if isinstance(prompt, str):
             prompt = [prompt]
         
+        if img is not None:
+            prompt.append(f"Image provided: {img}")
+
         if stream:
             response_generator = self._multi_modal.stream(prompt)
             full_response = ""
