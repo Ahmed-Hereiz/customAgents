@@ -1,24 +1,20 @@
 from customAgents.agent_prompt import BasePrompt
 from typing import Union
 from PIL import Image
-
+from pydub import AudioSegment
 
 class ReActPrompt(BasePrompt):
-    def __init__(self, question: str, example_workflow: str = "", prompt_string: str = "", img: Union[str, Image.Image, None] = None):
-        
-        self.example_workflow = example_workflow
-        self.question = question
+    def __init__(self, 
+                 text: str = "", 
+                 image: Union[str, Image.Image, None] = None, 
+                 audio: Union[str, AudioSegment, None] = None):
 
-        super().__init__(prompt_string, img)
+        super().__init__(text, image, audio)
 
-        self.img = self._load_image(img)
-        self.prompt = self._generate_prompt()
-        
-        
 
-    def _generate_prompt(self):
-        react_prompt = """
-{prompt_string}
+    def construct_prompt(self, query: str, example_workflow: str = ""):
+        self.prompt = """
+{text}
 You are an AI agent designed to answer questions through an iterative process. You have access to the following tools:
 {tools_and_role}
 
@@ -37,7 +33,8 @@ CRITICAL RULES:
 5. You may need multiple iterations to gather enough information. Be patient and thorough.
 6. Do NOT try to provide a final answer until you are absolutely certain you have all necessary information.
 7. You should have good reasoning ability while thinking, so if there is an indirect question, you can use math to solve for it.
-8. If an image is provided, consider using visual analysis tools if they might be relevant to the task.
+8. If an image is provided, handle it directly.
+9. If an audio file is provided, handle it directly.
 
 When you are CERTAIN you have ALL information needed to answer the original question:
 Thought: I now have all the information to answer the question
@@ -55,17 +52,20 @@ Example workflow:
 
 Let's begin!
 
-Question: {question}
+Question: {query}
 """
 
-        react_prompt = react_prompt.replace("{example_workflow}", self.example_workflow)
-        react_prompt = react_prompt.replace("{prompt_string}", self.prompt_string)
-        react_prompt = react_prompt.replace("{question}", self.question)
+        self.replace_placeholder("{example_workflow}", example_workflow)
+        self.replace_placeholder("{text}", self.text)
+        self.replace_placeholder("{query}", query)
 
-        if self.img:
-            react_prompt += "\n\nNote: An image is provided with this prompt. Consider using visual analysis tools if they might be relevant to the task."
+        if self.image:
+            self.prepend_to_prompt("An image is provided with this prompt. Consider using visual analysis tools if they might be relevant to the task.")
 
-        return react_prompt
+        if self.audio:
+            self.prepend_to_prompt("An audio file is provided with this prompt. Consider using audio analysis tools if they might be relevant to the task.")
+
+        return self.prompt
 
     def set_tools(self, tools: str, tool_names: str):
         """

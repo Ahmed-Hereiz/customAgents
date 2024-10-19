@@ -1,21 +1,22 @@
 from customAgents.agent_prompt import BasePrompt
 from typing import Union
 from PIL import Image
+from pydub import AudioSegment
 
 
 class SimplePrompt(BasePrompt):
-    def __init__(self, prompt_string: str = "", img: Union[str, Image.Image, None] = None):
+    def __init__(
+        self, 
+        text: str = "", 
+        image: Union[str, Image.Image, None] = None, 
+        audio: Union[str, AudioSegment, None] = None
+    ):
+        """
+        Initializes the SimplePrompt with the given text, image, and audio.
 
-        super().__init__(prompt_string, img)
-
-        self.img = self._load_image(img)
-        self.prompt = self._generate_prompt()
-        
-        
-    def _generate_prompt(self):
-        prompt = self.prompt_string
-
-        if self.img:
-            prompt += "\n\nNote: An image is provided with this prompt. Consider it in your response if relevant."
-
-        return prompt
+        :param text: The text to be associated with the prompt.
+        :param image: An optional image to be associated with the prompt. Can be a file path or a PIL Image object.
+        :param audio: An optional audio file path to be associated with the prompt or a pydub AudioSegment.
+        """
+        super().__init__(text, image, audio)
+        self.prompt = self.construct_prompt()

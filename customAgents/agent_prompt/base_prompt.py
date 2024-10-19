@@ -39,16 +39,6 @@ class BasePrompt:
 
         return self.prompt
     
-    def __call__(self, placeholder_dict: dict = {}, query: str = "") -> str:
-        """
-        Allows the BasePrompt instance to be called as a function to construct the prompt.
-
-        :param placeholder_dict: A dictionary of placeholders and their corresponding values.
-        :param query: An optional query string to append to the prompt.
-        :return: The constructed prompt string.
-        """
-        return self.construct_prompt(placeholder_dict, query)
-
     def _load_image(self, image: Union[str, Image.Image, None]) -> Union[Image.Image, None]:
         """
         Loads an image from a file path or returns the PIL Image object if already loaded.
