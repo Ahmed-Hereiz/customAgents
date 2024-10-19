@@ -1,6 +1,7 @@
 from colorama import Fore, Style
-from typing import Any, List
+from typing import Any, List, Union
 from PIL import Image
+from pydub import AudioSegment
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
@@ -54,21 +55,39 @@ class BaseMultiModal:
         else:
             raise ValueError('Model not supported. Currently supported models: gemini, gpt, claude')
 
-    def multimodal_generate(self, prompt: str, img: Image.Image, stream: bool = False, output_style: str = 'default') -> str:
+    def multimodal_generate(self, prompt: str, image: Union[Image.Image, None] = None, audio: Union[AudioSegment, None] = None, stream: bool = False, output_style: str = 'default') -> str:
 
-        buffered = io.BytesIO()
-        img.save(buffered, format="PNG")
-        img_str = base64.b64encode(buffered.getvalue()).decode()
+        content = [{"type": "text", "text": prompt}]
+        
+        if image:
+            buffered = io.BytesIO()
+            image.save(buffered, format="PNG")
+            img_str = base64.b64encode(buffered.getvalue()).decode()
+            img_data = {
+                "type": "image_url",
+                "image_url": f"data:image/png;base64,{img_str}"
+            }
+            content.append(img_data)
+        
+        if audio:
+            import pathlib
+            import io
 
-        image_message = HumanMessage(
-            content=[
-                {"type": "text", "text": prompt},
-                {"type": "image_url", "image_url": f"data:image/png;base64,{img_str}"}
-            ]
-        )
+            temp_audio_path = "temp_audio.mp3"
+            audio.export(temp_audio_path, format="mp3")
+
+            audio_data = {
+                "mime_type": "audio/mp3",
+                "data": pathlib.Path(temp_audio_path).read_bytes()
+            }
+
+            content.append(audio_data)
+            pathlib.Path(temp_audio_path).unlink()
+
+        multimodal_message = HumanMessage(content=content)
 
         if stream:
-            response_generator = self._multi_modal.stream([image_message])
+            response_generator = self._multi_modal.stream([multimodal_message])
             full_response = ""
             for chunk in response_generator:
                 chunk_text = chunk.content
@@ -79,7 +98,7 @@ class BaseMultiModal:
                     print(chunk_text, end="", flush=True)
             return full_response
         else:
-            response = self._multi_modal.invoke([image_message])
+            response = self._multi_modal.invoke([multimodal_message])
             if isinstance(response, AIMessage):
                 response_text = response.content
             else:
