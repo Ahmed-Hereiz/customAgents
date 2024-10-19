@@ -1,41 +1,88 @@
 from PIL import Image
 from typing import Union
 import os
+from pydub import AudioSegment
 
 
 class BasePrompt:
-    def __init__(self, prompt_string: str = "", img: Union[str, Image.Image, None] = None):
+    def __init__(self, text: str = "", image: Union[str, Image.Image, None] = None, audio: Union[str, AudioSegment, None] = None):
         """
         Initializes the BasePrompt with the given template file and prompt string.
 
-        :param prompt_string: The prompt string to be used.
-        :param img: An optional image to be associated with the prompt. Can be a file path or a PIL Image object.
+        :param text: The text to be associated with the prompt.
+        :param image: An optional image to be associated with the prompt. Can be a file path or a PIL Image object.
+        :param audio: An optional audio file path to be associated with the prompt or a pydub AudioSegment.
         """
 
-        self.prompt_string = prompt_string
-        self.img = self._load_image(img)
-        self.prompt = self._generate_prompt()
+        self.text = self._load_text(text)
+        self.image = self._load_image(image)
+        self.audio = self._load_audio(audio)
+        self.prompt = ""
 
-    def _generate_prompt(self):
+    def construct_prompt(self, placeholder_dict: dict = {}, query: str = ""):
         """
-        method for interfacing with runtime (used inside the runtime class), setting default to use prompt_string,
-        but this needs to overwritten inside every inherited class for being customizable for the use case.
+        Method for interfacing with runtime (used inside the runtime class), integrating text, image, and audio.
+        This needs to be overwritten inside every inherited class for being customizable for the use case.
         """
+        self.prompt += self.text
 
-        return self.prompt_string
+        for key, value in placeholder_dict.items():
+            self.replace_placeholder(f"{key}", value)
 
-    def _load_image(self, img: Union[str, Image.Image, None]) -> Union[Image.Image, None]:
+        self.append_to_prompt(query)
+
+        if self.image:
+            self.prepend_to_prompt("An image is provided with this prompt. Consider it in your response if relevant.\n")
+
+        if self.audio:
+            self.prepend_to_prompt("An audio file is provided with this prompt. Consider it in your response if relevant.\n")
+
+        return self.prompt
+    
+    def __call__(self, placeholder_dict: dict = {}, query: str = "") -> str:
+        """
+        Allows the BasePrompt instance to be called as a function to construct the prompt.
+
+        :param placeholder_dict: A dictionary of placeholders and their corresponding values.
+        :param query: An optional query string to append to the prompt.
+        :return: The constructed prompt string.
+        """
+        return self.construct_prompt(placeholder_dict, query)
+
+    def _load_image(self, image: Union[str, Image.Image, None]) -> Union[Image.Image, None]:
         """
         Loads an image from a file path or returns the PIL Image object if already loaded.
 
-        :param img: A file path to an image or a PIL Image object.
+        :param image: A file path to an image or a PIL Image object.
         :return: A PIL Image object or None if no image is provided.
         """
-        if isinstance(img, str) and os.path.isfile(img):
-            return Image.open(img)
-        elif isinstance(img, Image.Image):
-            return img
+        if isinstance(image, str) and os.path.isfile(image):
+            return Image.open(image)
+        elif isinstance(image, Image.Image):
+            return image
         return None
+
+    def _load_audio(self, audio: Union[str, None]) -> Union[AudioSegment, None]:
+        """
+        Loads an audio file from a file path or returns a pydub AudioSegment if already loaded.
+
+        :param audio: A file path to an audio file or a pydub AudioSegment.
+        :return: A pydub AudioSegment object or None if no audio is provided.
+        """
+        if isinstance(audio, str) and os.path.isfile(audio):
+            return AudioSegment.from_file(audio)
+        elif isinstance(audio, AudioSegment):
+            return audio
+        return None
+
+    def _load_text(self, text: str) -> str:
+        """
+        Loads text from a given string.
+
+        :param text: A string to be used as text.
+        :return: The provided text string.
+        """
+        return text
 
     def __repr__(self) -> str:
         """
@@ -43,8 +90,9 @@ class BasePrompt:
 
         :return: A string representation of the instance.
         """
-        return f"model prompt initialized with {self.prompt}"
-
+        if self.prompt == "":
+            return "Prompt is not constructed yet."
+        return f"BasePrompt initialized with prompt: \n\n{self.prompt}"
 
     def __str__(self) -> str:
         """
@@ -52,8 +100,9 @@ class BasePrompt:
 
         :return: A string representation of the instance.
         """
-        return f"model prompt initialized with {self.prompt}"
-
+        if self.prompt == "":
+            return "Prompt is not constructed yet."
+        return f"BasePrompt initialized with prompt: \n\n{self.prompt}"
 
     def __add__(self, other) -> str:
         """
@@ -62,7 +111,9 @@ class BasePrompt:
         :param other: Another BasePrompt instance.
         :return: The concatenated prompt strings.
         """
-        return self.prompt + '\n' + other.prompt
+        if isinstance(other, BasePrompt):
+            return self.prompt + '\n' + other.prompt
+        return NotImplemented
 
     def replace_placeholder(self, placeholder: str, value: str):
         """
@@ -72,7 +123,6 @@ class BasePrompt:
         :param value: The value to replace the placeholder with.
         """
         self.prompt = self.prompt.replace(placeholder, value)
-        self.prompt_string = self.prompt_string.replace(placeholder, value)
 
     def append_to_prompt(self, additional_text: str):
         """
@@ -80,8 +130,8 @@ class BasePrompt:
 
         :param additional_text: The text to be appended to the prompt.
         """
-        self.prompt += '\n' + additional_text
-        self.prompt_string += '\n' + additional_text
+        if additional_text:
+            self.prompt += '\n' + additional_text
 
     def prepend_to_prompt(self, additional_text: str):
         """
@@ -89,20 +139,51 @@ class BasePrompt:
 
         :param additional_text: The text to be prepended to the prompt.
         """
-        self.prompt = additional_text + '\n' + self.prompt
-        self.prompt_string = additional_text + '\n' + self.prompt_string
-
+        if additional_text:
+            self.prompt = additional_text + '\n' + self.prompt
+    
     def clear_prompt(self):
         """
         Clears the current prompt, resetting it to an empty string.
         """
         self.prompt = ""
-        self.prompt_string = ""
 
-    def set_image(self, img: Union[str, Image.Image]):
+    def set_image(self, image: Union[str, Image.Image]):
         """
         Sets or updates the image associated with the prompt.
 
-        :param img: The image to be associated with the prompt. Can be a file path or a PIL Image object.
+        :param image: The image to be associated with the prompt. Can be a file path or a PIL Image object.
         """
-        self.img = self._load_image(img)
+        self.image = self._load_image(image)
+
+    def set_audio(self, audio: Union[str, AudioSegment]):
+        """
+        Sets or updates the audio associated with the prompt.
+
+        :param audio: The audio file path or a pydub AudioSegment to be associated with the prompt.
+        """
+        self.audio = self._load_audio(audio)
+
+    def get_prompt(self) -> str:
+        """
+        Returns the current prompt string.
+
+        :return: The current prompt string.
+        """
+        return self.prompt
+
+    def has_image(self) -> bool:
+        """
+        Checks if an image is associated with the prompt.
+
+        :return: True if an image is associated, False otherwise.
+        """
+        return self.image is not None
+
+    def has_audio(self) -> bool:
+        """
+        Checks if an audio file is associated with the prompt.
+
+        :return: True if an audio file is associated, False otherwise.
+        """
+        return self.audio is not None
