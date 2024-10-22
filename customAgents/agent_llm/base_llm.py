@@ -17,6 +17,7 @@ class BaseLLM:
             initialize_verbose: bool = False,
             max_tokens: Optional[int] = None,
             top_p: Optional[float] = None,
+            top_k: Optional[int] = None,
             frequency_penalty: Optional[float] = None,
             presence_penalty: Optional[float] = None,
             *args: Any,
@@ -34,6 +35,7 @@ class BaseLLM:
         :param initialize_verbose: If True, displays warnings during initialization if there are issues.
         :param max_tokens: The maximum number of tokens to generate in a single response.
         :param top_p: The cumulative probability for top-p sampling.
+        :param top_k: The number of highest probability vocabulary tokens to keep for top-k-filtering.
         :param frequency_penalty: Penalizes new tokens based on their existing frequency in the text.
         :param presence_penalty: Penalizes new tokens based on whether they appear in the text so far.
         :param *args: Additional positional arguments.
@@ -48,6 +50,7 @@ class BaseLLM:
         self._initialize_verbose = initialize_verbose
         self._max_tokens = max_tokens
         self._top_p = top_p
+        self._top_k = top_k
         self._frequency_penalty = frequency_penalty
         self._presence_penalty = presence_penalty
         self._additional_args = args
@@ -68,6 +71,7 @@ class BaseLLM:
             "temperature": self._temperature,
             "max_tokens": self._max_tokens,
             "top_p": self._top_p,
+            "top_k": self._top_k,
             "frequency_penalty": self._frequency_penalty,
             "presence_penalty": self._presence_penalty,
             **self._additional_kwargs
