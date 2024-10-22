@@ -1,7 +1,6 @@
 from colorama import Fore, Style
 from typing import Any, List, Union
 from PIL import Image
-from pydub import AudioSegment
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
@@ -55,7 +54,7 @@ class BaseMultiModal:
         else:
             raise ValueError('Model not supported. Currently supported models: gemini, gpt, claude')
 
-    def multimodal_generate(self, prompt: str, image: Union[Image.Image, None] = None, audio: Union[AudioSegment, None] = None, stream: bool = False, output_style: str = 'default') -> str:
+    def multimodal_generate(self, prompt: str, image: Union[Image.Image, None] = None, stream: bool = False, output_style: str = 'default') -> str:
 
         content = [{"type": "text", "text": prompt}]
         
@@ -68,21 +67,6 @@ class BaseMultiModal:
                 "image_url": f"data:image/png;base64,{img_str}"
             }
             content.append(img_data)
-        
-        if audio:
-            import pathlib
-            import io
-
-            temp_audio_path = "temp_audio.mp3"
-            audio.export(temp_audio_path, format="mp3")
-
-            audio_data = {
-                "mime_type": "audio/mp3",
-                "data": pathlib.Path(temp_audio_path).read_bytes()
-            }
-
-            content.append(audio_data)
-            pathlib.Path(temp_audio_path).unlink()
 
         multimodal_message = HumanMessage(content=content)
 
