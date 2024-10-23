@@ -9,4 +9,5 @@ bs4
 lxml
 PyPDF2
 selenium
-pydub
+opencv-python
+pillow
