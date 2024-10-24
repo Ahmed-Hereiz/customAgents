@@ -1,27 +1,24 @@
 from PIL import Image
 from typing import Union
 import os
-from pydub import AudioSegment
 
 
 class BasePrompt:
-    def __init__(self, text: str = "", image: Union[str, Image.Image, None] = None, audio: Union[str, AudioSegment, None] = None):
+    def __init__(self, text: str = "", image: Union[str, Image.Image, None] = None):
         """
         Initializes the BasePrompt with the given template file and prompt string.
 
         :param text: The text to be associated with the prompt.
         :param image: An optional image to be associated with the prompt. Can be a file path or a PIL Image object.
-        :param audio: An optional audio file path to be associated with the prompt or a pydub AudioSegment.
         """
 
         self.text = self._load_text(text)
         self.image = self._load_image(image)
-        self.audio = self._load_audio(audio)
         self.prompt = ""
 
     def construct_prompt(self, placeholder_dict: dict = {}, query: str = ""):
         """
-        Method for interfacing with runtime (used inside the runtime class), integrating text, image, and audio.
+        Method for interfacing with runtime (used inside the runtime class), integrating text and image.
         This needs to be overwritten inside every inherited class for being customizable for the use case.
         """
         self.prompt += self.text
@@ -33,9 +30,6 @@ class BasePrompt:
 
         if self.image:
             self.prepend_to_prompt("An image is provided with this prompt. Consider it in your response if relevant.\n")
-
-        if self.audio:
-            self.prepend_to_prompt("An audio file is provided with this prompt. Consider it in your response if relevant.\n")
 
         return self.prompt
     
@@ -50,19 +44,6 @@ class BasePrompt:
             return Image.open(image)
         elif isinstance(image, Image.Image):
             return image
-        return None
-
-    def _load_audio(self, audio: Union[str, None]) -> Union[AudioSegment, None]:
-        """
-        Loads an audio file from a file path or returns a pydub AudioSegment if already loaded.
-
-        :param audio: A file path to an audio file or a pydub AudioSegment.
-        :return: A pydub AudioSegment object or None if no audio is provided.
-        """
-        if isinstance(audio, str) and os.path.isfile(audio):
-            return AudioSegment.from_file(audio)
-        elif isinstance(audio, AudioSegment):
-            return audio
         return None
 
     def _load_text(self, text: str) -> str:
@@ -146,14 +127,6 @@ class BasePrompt:
         """
         self.image = self._load_image(image)
 
-    def set_audio(self, audio: Union[str, AudioSegment]):
-        """
-        Sets or updates the audio associated with the prompt.
-
-        :param audio: The audio file path or a pydub AudioSegment to be associated with the prompt.
-        """
-        self.audio = self._load_audio(audio)
-
     def get_prompt(self) -> str:
         """
         Returns the current prompt string.
@@ -169,11 +142,3 @@ class BasePrompt:
         :return: True if an image is associated, False otherwise.
         """
         return self.image is not None
-
-    def has_audio(self) -> bool:
-        """
-        Checks if an audio file is associated with the prompt.
-
-        :return: True if an audio file is associated, False otherwise.
-        """
-        return self.audio is not None

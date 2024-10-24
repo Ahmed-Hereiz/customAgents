@@ -1,15 +1,13 @@
 from customAgents.agent_prompt import BasePrompt
 from typing import Union
 from PIL import Image
-from pydub import AudioSegment
 
 class ReActPrompt(BasePrompt):
     def __init__(self, 
                  text: str = "", 
-                 image: Union[str, Image.Image, None] = None, 
-                 audio: Union[str, AudioSegment, None] = None):
+                 image: Union[str, Image.Image, None] = None):
 
-        super().__init__(text, image, audio)
+        super().__init__(text, image)
 
 
     def construct_prompt(self, query: str, example_workflow: str = ""):

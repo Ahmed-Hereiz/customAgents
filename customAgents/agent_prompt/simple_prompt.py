@@ -1,15 +1,13 @@
 from customAgents.agent_prompt import BasePrompt
 from typing import Union
 from PIL import Image
-from pydub import AudioSegment
 
 
 class SimplePrompt(BasePrompt):
     def __init__(
         self, 
         text: str = "", 
-        image: Union[str, Image.Image, None] = None, 
-        audio: Union[str, AudioSegment, None] = None
+        image: Union[str, Image.Image, None] = None
     ):
         """
         Initializes the SimplePrompt with the given text, image, and audio.
@@ -18,5 +16,5 @@ class SimplePrompt(BasePrompt):
         :param image: An optional image to be associated with the prompt. Can be a file path or a PIL Image object.
         :param audio: An optional audio file path to be associated with the prompt or a pydub AudioSegment.
         """
-        super().__init__(text, image, audio)
+        super().__init__(text, image)
         self.prompt = self.construct_prompt()
