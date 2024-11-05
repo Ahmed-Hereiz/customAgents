@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup # type: ignore
 from typing import Any
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from langchain_core.documents import Document
 from customAgents.agent_tools import BaseTool
 from langchain_community.document_transformers import Html2TextTransformer
 from langchain_community.document_loaders import AsyncHtmlLoader
@@ -66,29 +67,6 @@ class ScrapeStaticLinkTool(ScrapeLinkTool):
             return f"Error scraping static URL: {str(e)}"
     
 
-# class ScrapeDynamicLinkTool(ScrapeStaticLinkTool):
-#     def __init__(self, description: str, service: str="/usr/bin/chromedriver", tool_name: str = None, max_num_chars: int = 5000):
-#         super().__init__(description, tool_name, max_num_chars)
-#         self.service = service
-
-#     def execute_func(self, url: str) -> str:
-#         try:
-#             service = Service(self.service)
-#             driver = webdriver.Chrome(service=service)
-#             # options.add_argument('--headless') 
-#             # options.add_argument('--no-sandbox')
-#             # options.add_argument('--disable-dev-shm-usage')
-            
-#             driver.get(url)
-#             time.sleep(5)  
-#             page_source = driver.page_source
-#             driver.quit()
-
-#             return self._scrape(page_source)
-#         except Exception as e:
-#             return f"Error scraping dynamic URL: {str(e)}"
-
-
 class ScrapeDynamicLinkTool(ScrapeStaticLinkTool):
     def __init__(self, description: str, service: str="/usr/bin/chromedriver", tool_name: str = None, max_num_chars: int = 5000):
         self.service = service
@@ -104,23 +82,9 @@ class ScrapeDynamicLinkTool(ScrapeStaticLinkTool):
             page_source = driver.page_source
             driver.quit()
 
-            return self._scrape(page_source)
+            # Create a Document object with the page source
+            doc = Document(page_content=page_source)
+            return self._scrape([doc])
         
         except Exception as e:
             return f"Error scraping dynamic URL: {str(e)}"
-
-
-if __name__ == "__main__":
-    # Test static scraping
-    # static_scraper = ScrapeLinkTool("Test static scraping")
-    # static_url = "https://github.com/Ahmed-Hereiz"
-    # print("\nTesting static scraping...")
-    # print(f"URL: {static_url}")
-    # print("Result:", static_scraper.execute_func(static_url))
-
-    # Test dynamic scraping 
-    dynamic_scraper = ScrapeDynamicLinkTool("Test dynamic scraping")
-    dynamic_url = "https://github.com/Ahmed-Hereiz" # Replace with actual dynamic site
-    print("\nTesting dynamic scraping...")
-    print(f"URL: {dynamic_url}")
-    print("Result:", dynamic_scraper.execute_func(dynamic_url))
