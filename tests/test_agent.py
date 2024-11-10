@@ -49,11 +49,14 @@ Final Answer: the product of 22 * 33 is 726 [if there is more to describe to mak
 """
 
 question = input("Enter you question : ")
+
 llm = SimpleStreamLLM(api_key=config['api_key'],model='gemini-1.5-flash',temperature=0.7)
 prompt = ReActPrompt(question=question, example_workflow=example_workflow)
+
 python_tool = PythonRuntimeTool(description="tool that can run python code (give the code for this function as md format)",tool_name="python_tool")
 search_tool = SearchTool(description="tool that can search internet (each query you input will get different search)",tool_name="search_tool")
-toolkit = ToolKit(tools=[search_tool])
+toolkit = ToolKit(tools=[search_tool,python_tool])
+
 agent = ReActRuntime(llm=llm,prompt=prompt,toolkit=toolkit)
 
 print(agent.loop(agent_max_steps=30,verbose_tools=True))
