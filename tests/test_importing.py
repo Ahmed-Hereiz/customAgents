@@ -20,21 +20,21 @@ class TestcustomAgentsImport(unittest.TestCase):
 
     def test_import_agent_routers(self):
         try:
-            from customAgents.agent_routers import __all__ as routers_all
+            from customAgents.tool_routers import __all__ as routers_all
             print(f"\nagent_routers __all__: {routers_all}")
         except ImportError as e:
             self.fail(f"Import failed for agent_routers: {e}")
 
     def test_import_agent_runtime(self):
         try:
-            from customAgents.agent_runtime import __all__ as runtime_all
+            from customAgents.runtime import __all__ as runtime_all
             print(f"\nagent_runtime __all__: {runtime_all}")
         except ImportError as e:
             self.fail(f"Import failed for agent_runtime: {e}")
 
     def test_import_agent_env(self):
         try:
-            from customAgents.agent_env import __all__ as env_all
+            from customAgents.env import __all__ as env_all
             print(f"\nagent_env __all__: {env_all}")
         except ImportError as e:
             self.fail(f"Import failed for agent_env: {e}")
@@ -48,7 +48,7 @@ class TestcustomAgentsImport(unittest.TestCase):
 
     def test_import_agent_models(self):
         try:
-            from customAgents.agent_models import __all__ as models_all
+            from customAgents.ml_models import __all__ as models_all
             print(f"\nagent_models __all__: {models_all}")
         except ImportError as e:
             self.fail(f"Import failed for agent_models: {e}")
