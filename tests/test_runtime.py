@@ -1,4 +1,4 @@
-from customAgents.agent_runtime import HumanLoopRuntime, ChooseToolRuntime
+from customAgents.runtime import HumanLoopRuntime, ChooseToolRuntime
 from customAgents.agent_llm import SimpleStreamLLM
 from customAgents.agent_prompt import SimplePrompt, ChooseToolsPrompt
 from common.utils import load_config, parse_safety_settings
