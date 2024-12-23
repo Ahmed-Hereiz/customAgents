@@ -1,5 +1,5 @@
 from customAgents.agent_llm import SimpleStreamLLM
-from customAgents.agent_prompt import SimplePrompt, ReActPrompt
+from customAgents.agent_prompt import ReActPrompt
 from customAgents.agent_tools import ToolKit, SearchTool, PythonRuntimeTool
 from customAgents.runtime import ReActRuntime
 
