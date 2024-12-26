@@ -54,7 +54,12 @@ class BaseRuntime:
     
 
     def _extract_json_from_string(self, text: str):
+        """
+        Extracts JSON objects from a string.
 
+        :param text: Input string that may contain JSON objects
+        :return: List of extracted JSON objects
+        """
         json_objects = []
         brace_stack = []
         json_str = ""
@@ -78,3 +83,45 @@ class BaseRuntime:
                     json_str = ""
 
         return json_objects
+
+    def reset(self) -> None:
+        """
+        Resets the runtime state by clearing the prompt.
+        """
+        self.prompt.prompt = ""
+        self.prompt.img = None
+
+    def update_prompt(self, new_prompt: str) -> None:
+        """
+        Updates the current prompt with new text.
+
+        :param new_prompt: The new prompt text to set
+        """
+        self.prompt.prompt = new_prompt
+
+    def add_to_prompt(self, additional_text: str) -> None:
+        """
+        Appends additional text to the current prompt.
+
+        :param additional_text: Text to append to the current prompt
+        """
+        self.prompt.prompt += additional_text
+
+    def get_toolkit_info(self) -> dict:
+        """
+        Returns information about available tools in the toolkit.
+
+        :return: Dictionary containing tool information
+        """
+        return {
+            "available_tools": self.toolkit.list_tools(),
+            "tool_count": len(self.toolkit.list_tools())
+        }
+
+    def __str__(self) -> str:
+        """
+        Returns a string representation of the runtime.
+
+        :return: String describing the runtime state
+        """
+        return f"BaseRuntime(llm={type(self.llm).__name__}, prompt_length={len(self.prompt.prompt)}, tools={len(self.toolkit.list_tools())})"
