@@ -127,3 +127,41 @@ class ToolKit:
         :return: The number of tools.
         """
         return len(self.tools)
+    
+    def add_tool(self, tool_name: str, tool: Any) -> None:
+        """
+        Adds a new tool to the toolkit.
+
+        :param tool_name: The name of the tool to add.
+        :param tool: The tool object to add.
+        """
+        self.tools[tool_name] = tool
+        self.tool_names.append(tool_name)
+
+    def remove_tool(self, tool_name: str) -> None:
+        """
+        Removes a tool from the toolkit.
+
+        :param tool_name: The name of the tool to remove.
+        :raises ValueError: If the tool is not found in the toolkit.
+        """
+        if tool_name in self.tools:
+            del self.tools[tool_name]
+            self.tool_names.remove(tool_name)
+        else:
+            raise ValueError(f"Tool '{tool_name}' is not found in the toolkit.")
+
+    def list_tools(self) -> List[str]:
+        """
+        Lists all the tools available in the toolkit.
+
+        :return: A list of tool names.
+        """
+        return self.tool_names
+
+    def clear_tools(self) -> None:
+        """
+        Clears all tools from the toolkit.
+        """
+        self.tools.clear()
+        self.tool_names.clear()
