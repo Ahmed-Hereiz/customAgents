@@ -174,3 +174,4 @@ class BasePrompt:
         :return: The length of the prompt string.
         """
         return len(self.prompt)
+
