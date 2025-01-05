@@ -45,6 +45,8 @@ Remember:
 - If an observation is unclear or insufficient, use your next action to clarify or gather more information.
 - Your goal is to be thorough and accurate, not quick. Take as many iterations as needed and use tools as much time as you need to get the best result.
 
+{memory_access}
+
 Example workflow:
 {example_workflow}
 
@@ -56,6 +58,7 @@ Question: {query}
         self.replace_placeholder("{example_workflow}", example_workflow)
         self.replace_placeholder("{text}", self.text)
         self.replace_placeholder("{query}", query)
+        self.replace_placeholder("{memory_access}", "")
 
         if self.image:
             self.prepend_to_prompt("An image is provided with this prompt. Consider using visual analysis tools if they might be relevant to the task.")
