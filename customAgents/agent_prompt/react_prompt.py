@@ -10,7 +10,7 @@ class ReActPrompt(BasePrompt):
         super().__init__(text, image)
 
 
-    def construct_prompt(self, query: str, example_workflow: str = ""):
+    def construct_prompt(self, query: str, example_workflow: str = "", memory_access: str = ""):
         self.prompt = """
 {text}
 You are an AI agent designed to answer questions through an iterative process. You have access to the following tools:
@@ -58,7 +58,7 @@ Question: {query}
         self.replace_placeholder("{example_workflow}", example_workflow)
         self.replace_placeholder("{text}", self.text)
         self.replace_placeholder("{query}", query)
-        self.replace_placeholder("{memory_access}", "")
+        self.replace_placeholder("{memory_access}", memory_access)
 
         if self.image:
             self.prepend_to_prompt("An image is provided with this prompt. Consider using visual analysis tools if they might be relevant to the task.")
