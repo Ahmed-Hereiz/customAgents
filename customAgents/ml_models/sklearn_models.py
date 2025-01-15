@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional
 import joblib
 from customAgents.ml_models.base_models import BaseModels
 
-class SklearnModel(BaseModels):
+class SklearnModels(BaseModels):
     def __init__(self, model_path: str, model_type: Optional[str] = None, model_params: Optional[Dict[str, Any]] = None):
         super().__init__(model_type, model_params)
         self.model_path = model_path
