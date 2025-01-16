@@ -8,7 +8,7 @@ from .huggingface_models import (
     HFTxt2SpeechModels,
     HFSpeech2TxtModels
 )
-from .sklearn_models import SklearnModel
+from .sklearn_models import SklearnModels
 
 
 
@@ -21,5 +21,5 @@ __all__ = [
     'HFTxt2SpeechModels',
     'HFSpeech2TxtModels',
     'GradioClientModels',
-    "SklearnModel"
+    "SklearnModels"
 ]
