@@ -1,10 +1,10 @@
-# from customAgents.ml_models import GradioClientModels
-# from customAgents.agent_tools import ModelInferenceTool
+from customAgents.ml_models import GradioClientModels
+from customAgents.agent_tools import ModelInferenceTool
 
 
-# model = GradioClientModels(gradio_client_id="mukaist/DALLE-4k")
-# model_tool = ModelInferenceTool(model=model)
+model = GradioClientModels(gradio_client_id="mukaist/DALLE-4k")
+model_tool = ModelInferenceTool(model=model)
 
-# r = model_tool.execute_func("green yellow ai assistant chatbot robot")
-# print(r)
+r = model_tool.execute_func("green yellow ai assistant chatbot robot")
+print(r)
 
