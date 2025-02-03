@@ -9,7 +9,7 @@ class BaseRouter:
     def exec_router(self):
         time.sleep(self.exec_after)
         self.execution_time = time.time()  # Record the execution time
-        return "router executed !"
+        return self.execution_time
     
     def get_execution_time(self):
         """Returns the time at which the router was executed."""
