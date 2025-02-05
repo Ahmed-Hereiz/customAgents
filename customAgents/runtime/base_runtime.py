@@ -19,7 +19,7 @@ class BaseRuntime:
         self.toolkit = toolkit
 
 
-    def step(self) -> str:
+    def step(self, query=None) -> str:
         """
         Generates a response from the LLM using the current agent prompt.
 
@@ -29,9 +29,13 @@ class BaseRuntime:
         if not self.llm or not self.prompt:
             raise ValueError("LLM or agent prompt is not properly initialized.")
         if isinstance(self.llm, BaseLLM):
+            if query is not None:
+                self.prompt.prompt += f"\n{query}"
             response = self.llm.llm_generate(input=self.prompt.prompt)
             return response
         elif isinstance(self.llm, BaseMultiModal):
+            if query is not None:
+                self.prompt.prompt += f"\n{query}"
             if self.prompt.img is None:
                 response = self.llm.multimodal_generate(prompt=self.prompt.prompt)
             else:
