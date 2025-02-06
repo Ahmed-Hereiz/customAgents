@@ -43,7 +43,7 @@ class BaseRuntime:
             return response
 
 
-    def loop(self, n_steps: int = 1) -> str:
+    def loop(self, n_steps: int = 1, query: str = None) -> str:
         """
         Continuously generates responses for a specified number of steps.
 
@@ -51,7 +51,7 @@ class BaseRuntime:
         :return: The final response generated after the specified number of steps.
         """
         for _ in range(n_steps):
-            response = self.step()
+            response = self.step(query=query)
             self.prompt.prompt += f"\n{response}"
 
         return response
