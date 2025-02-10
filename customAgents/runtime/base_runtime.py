@@ -30,16 +30,16 @@ class BaseRuntime:
             raise ValueError("LLM or agent prompt is not properly initialized.")
         if isinstance(self.llm, BaseLLM):
             if query is not None:
-                self.prompt.prompt += f"\n{query}"
-            response = self.llm.llm_generate(input=self.prompt.prompt)
+                input_query = self.prompt.prompt + f"\n{query}"
+            response = self.llm.llm_generate(input=input_query)
             return response
         elif isinstance(self.llm, BaseMultiModal):
             if query is not None:
-                self.prompt.prompt += f"\n{query}"
+                input_query = self.prompt.prompt = f"\n{query}"
             if self.prompt.img is None:
-                response = self.llm.multimodal_generate(prompt=self.prompt.prompt)
+                response = self.llm.multimodal_generate(prompt=input_query)
             else:
-                response = self.llm.multimodal_generate(prompt=self.prompt.prompt,img=self.prompt.img)
+                response = self.llm.multimodal_generate(prompt=input_query,img=self.prompt.img)
             return response
 
 
