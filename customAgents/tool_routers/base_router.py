@@ -29,3 +29,26 @@ class BaseRouter:
     
     def __repr__(self) -> str:
         return f"BaseRouter(exec_after={self.exec_after})"
+    
+    def is_executed(self) -> bool:
+        """Checks if the router has been executed."""
+        return self.execution_time is not None
+
+    def get_time_since_execution(self) -> float:
+        """Returns the time elapsed since the router was executed."""
+        if self.execution_time is None:
+            return 0.0
+        return time.time() - self.execution_time
+
+    def set_execution_time(self, execution_time: float):
+        """Manually sets the execution time."""
+        self.execution_time = execution_time
+
+    def delay_execution(self, additional_time: float):
+        """Delays the execution time by an additional amount."""
+        self.exec_after += additional_time
+
+    def reset_exec_after(self):
+        """Resets the exec_after value to its initial state."""
+        self.exec_after = 0
+        print("Execution delay has been reset.")
