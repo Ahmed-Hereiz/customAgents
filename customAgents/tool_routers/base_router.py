@@ -44,10 +44,6 @@ class BaseRouter:
         """Manually sets the execution time."""
         self.execution_time = execution_time
 
-    def delay_execution(self, additional_time: float):
-        """Delays the execution time by an additional amount."""
-        self.exec_after += additional_time
-
     def reset_exec_after(self):
         """Resets the exec_after value to its initial state."""
         self.exec_after = 0
