@@ -43,8 +43,3 @@ class BaseRouter:
     def set_execution_time(self, execution_time: float):
         """Manually sets the execution time."""
         self.execution_time = execution_time
-
-    def reset_exec_after(self):
-        """Resets the exec_after value to its initial state."""
-        self.exec_after = 0
-        print("Execution delay has been reset.")
