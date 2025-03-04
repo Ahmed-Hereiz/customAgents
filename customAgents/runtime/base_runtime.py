@@ -31,15 +31,13 @@ class BaseRuntime:
         if isinstance(self.llm, BaseLLM):
             if query is not None:
                 input_query = self.prompt.prompt + f"\n{query}"
+            else:
+                input_query = self.prompt.prompt
             response = self.llm.llm_generate(input=input_query)
             return response
         elif isinstance(self.llm, BaseMultiModal):
-            if query is not None:
-                input_query = self.prompt.prompt = f"\n{query}"
-            if self.prompt.img is None:
-                response = self.llm.multimodal_generate(prompt=input_query)
-            else:
-                response = self.llm.multimodal_generate(prompt=input_query,img=self.prompt.img)
+            input_query = self.prompt.prompt if query is None else f"\n{query}"
+            response = self.llm.multimodal_generate(prompt=input_query, img=self.prompt.img if self.prompt.img is not None else None)
             return response
 
 
