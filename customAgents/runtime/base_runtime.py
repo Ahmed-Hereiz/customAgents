@@ -29,10 +29,9 @@ class BaseRuntime:
         if not self.llm or not self.prompt:
             raise ValueError("LLM or agent prompt is not properly initialized.")
         if isinstance(self.llm, BaseLLM):
+            input_query = self.prompt.prompt
             if query is not None:
-                input_query = self.prompt.prompt + f"\n{query}"
-            else:
-                input_query = self.prompt.prompt
+                input_query += f"\n{query}"
             response = self.llm.llm_generate(input=input_query)
             return response
         elif isinstance(self.llm, BaseMultiModal):
