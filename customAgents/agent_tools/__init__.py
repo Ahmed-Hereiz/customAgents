@@ -21,3 +21,13 @@ __all__ = [
     'ModelInferenceTool',
     'LangchainToolLoader'
 ]
+
+__name__ = "customAgents.agent_tools"
+
+__package__ = "customAgents"
+
+__file__ = __file__
+
+__path__ = __path__
+
+__version__ = "1.0.0"  
