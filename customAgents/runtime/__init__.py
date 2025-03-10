@@ -12,3 +12,13 @@ __all__ = [
     'ReActRuntime',
     'ChooseToolRuntime'
 ]
+
+__name__ = "customAgents.runtime"
+
+__package__ = "customAgents"
+
+__file__ = __file__
+
+__path__ = __path__
+
+__version__ = "1.0.0"  
