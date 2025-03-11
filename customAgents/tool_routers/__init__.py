@@ -11,3 +11,14 @@ __all__ = [
     'TypeConditionalRouter',
     'SizeConditionalRouter',
 ]
+
+
+__name__ = "customAgents.tool_routers"
+
+__package__ = "customAgents"
+
+__file__ = __file__
+
+__path__ = __path__
+
+__version__ = "1.0.0"  
