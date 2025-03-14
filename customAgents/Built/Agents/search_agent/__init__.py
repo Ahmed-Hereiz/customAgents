@@ -7,7 +7,7 @@ __all__ = [
     "SearchAgent"
 ]
 
-__name__ = "customAgents.Built.Agents"
+__name__ = "customAgents.Built.SearchAgents"
 
 __package__ = "customAgents"
 
