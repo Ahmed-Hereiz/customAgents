@@ -8,7 +8,7 @@ __all__ = [
 ]
 
 
-__name__ = "customAgents.Built.Agents"
+__name__ = "customAgents.Built.CodingAgents"
 
 __package__ = "customAgents"
 
