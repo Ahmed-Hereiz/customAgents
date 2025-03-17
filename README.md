@@ -25,3 +25,4 @@ To get started with building your custom AI agents, follow these simple steps:
 ### Note:
 wait until the setup process is complete.
 
+(currently building new version of the packages)
